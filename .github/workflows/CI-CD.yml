@@ -6,6 +6,10 @@ name: FindApple_CICD
 on:
   release:
     types: [created]
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
 
 jobs:
   CI:
