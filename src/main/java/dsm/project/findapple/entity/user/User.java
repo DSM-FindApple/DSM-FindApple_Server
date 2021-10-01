@@ -22,6 +22,8 @@ public class User {
 
     private String kakaoNickName;
 
+    private Integer point;
+
     @OneToMany(mappedBy = "user")
     private List<Lost> losts;
 
