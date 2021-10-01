@@ -1,0 +1,10 @@
+package dsm.project.findapple.payload.request;
+
+import lombok.Getter;
+
+@Getter
+public class SignInRequest {
+    private Long kakaoId;
+    private String kakaoNickName;
+    private String deviceToken;
+}
