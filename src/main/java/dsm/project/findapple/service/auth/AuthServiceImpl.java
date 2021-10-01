@@ -86,6 +86,7 @@ public class AuthServiceImpl implements AuthService {
         deviceTokenRepository.findByDeviceTokenAndUser(deviceToken, user)
                 .orElseThrow(RuntimeException::new);
 
+        refreshTokenRepository.deleteByKakaoId(user.getKakaoId());
         deviceTokenRepository.deleteByDeviceTokenAndUser(deviceToken, user);
     }
 }
