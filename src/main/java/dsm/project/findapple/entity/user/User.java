@@ -33,4 +33,10 @@ public class User {
     @OneToOne
     @JoinColumn(name = "visit_area")
     private Area area;
+
+    public User updateUserName(String kakaoNickName) {
+        this.kakaoNickName = kakaoNickName;
+
+        return this;
+    }
 }

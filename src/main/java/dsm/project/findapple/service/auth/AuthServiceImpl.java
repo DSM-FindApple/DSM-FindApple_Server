@@ -25,7 +25,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenResponse signIn(SignInRequest signInRequest) {
-        return userRepository.findByKakaoIdAndKakaoNickName(signInRequest.getKakaoId(), signInRequest.getKakaoNickName())
+        return userRepository.findByKakaoId(signInRequest.getKakaoId())
                 .map(user -> {
                     String accessToken = jwtProvider.generateAccessToken(user.getKakaoId());
                     String refreshToken = jwtProvider.generateRefreshToken(accessToken);
@@ -36,6 +36,12 @@ public class AuthServiceImpl implements AuthService {
                                     .refreshToken(refreshToken)
                                     .build()
                     );
+
+                    if(!user.getKakaoNickName().equals(signInRequest.getKakaoNickName())) {
+                        userRepository.save(
+                                user.updateUserName(signInRequest.getKakaoNickName())
+                        );
+                    }
 
                     if(!deviceTokenRepository.existsByUserAndDeviceToken(user, signInRequest.getDeviceToken())) {
                         deviceTokenRepository.save(
