@@ -41,8 +41,4 @@ public class Lost {
 
     @Enumerated(value = EnumType.STRING)
     private Category category;
-
-    @OneToMany
-    @JoinColumn(name = "lost_image_id")
-    private List<LostImage> lostImages;
 }

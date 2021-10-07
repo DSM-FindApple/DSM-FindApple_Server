@@ -41,8 +41,4 @@ public class Find {
 
     @Enumerated(value = EnumType.STRING)
     private Category category;
-
-    @OneToMany
-    @JoinColumn(name = "find_image_id")
-    private List<FindImage> findImages;
 }
