@@ -26,6 +26,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+    //s3 config
+    implementation 'org.springframework.cloud:spring-cloud-aws-autoconfigure:2.2.1.RELEASE'
 }
 
 test {
