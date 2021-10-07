@@ -7,4 +7,6 @@ public class SignInRequest {
     private Long kakaoId;
     private String kakaoNickName;
     private String deviceToken;
+    private Double longitude;
+    private Double latitude;
 }

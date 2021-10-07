@@ -1,5 +1,7 @@
 package dsm.project.findapple.service.auth;
 
+import dsm.project.findapple.entity.area.Area;
+import dsm.project.findapple.entity.area.AreaRepository;
 import dsm.project.findapple.entity.deviceToken.DeviceToken;
 import dsm.project.findapple.entity.deviceToken.DeviceTokenRepository;
 import dsm.project.findapple.entity.refresh_token.RefreshToken;
@@ -20,12 +22,12 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final DeviceTokenRepository deviceTokenRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final AreaRepository areaRepository;
 
     private final JwtProvider jwtProvider;
 
-    @Override
-    public TokenResponse signIn(SignInRequest signInRequest) {
-        return userRepository.findByKakaoId(signInRequest.getKakaoId())
+    private TokenResponse getTokens(Long kakaoId, String kakaoNickName, String deviceToken) {
+        return userRepository.findByKakaoId(kakaoId)
                 .map(user -> {
                     String accessToken = jwtProvider.generateAccessToken(user.getKakaoId());
                     String refreshToken = jwtProvider.generateRefreshToken(accessToken);
@@ -37,16 +39,16 @@ public class AuthServiceImpl implements AuthService {
                                     .build()
                     );
 
-                    if(!user.getKakaoNickName().equals(signInRequest.getKakaoNickName())) {
+                    if(!user.getKakaoNickName().equals(kakaoNickName)) {
                         userRepository.save(
-                                user.updateUserName(signInRequest.getKakaoNickName())
+                                user.updateUserName(kakaoNickName)
                         );
                     }
 
-                    if(!deviceTokenRepository.existsByUserAndDeviceToken(user, signInRequest.getDeviceToken())) {
+                    if(!deviceTokenRepository.existsByUserAndDeviceToken(user, deviceToken)) {
                         deviceTokenRepository.save(
                                 DeviceToken.builder()
-                                        .deviceToken(signInRequest.getDeviceToken())
+                                        .deviceToken(deviceToken)
                                         .user(user)
                                         .build()
                         );
@@ -56,7 +58,44 @@ public class AuthServiceImpl implements AuthService {
                             .accessToken(accessToken)
                             .refreshToken(refreshToken)
                             .build();
-                }).orElseThrow(RuntimeException::new);
+                }).orElse(null);
+    }
+
+    @Override
+    public TokenResponse signIn(SignInRequest signInRequest) {
+        TokenResponse tokenResponse = getTokens(
+                signInRequest.getKakaoId(),
+                signInRequest.getKakaoNickName(),
+                signInRequest.getDeviceToken()
+        );
+
+        User user = null;
+        Area area;
+
+        if(tokenResponse == null) {
+            user = User.builder()
+                    .kakaoId(signInRequest.getKakaoId())
+                    .kakaoNickName(signInRequest.getKakaoNickName())
+                    .point(0)
+                    .build();
+
+            area = Area.builder()
+                    .latitude(signInRequest.getLatitude())
+                    .longitude(signInRequest.getLongitude())
+                    .build();
+
+            userRepository.save(user);
+            areaRepository.save(area);
+        }
+
+        if(user == null)
+            throw new RuntimeException("sign up failed");
+
+        return getTokens(
+                user.getKakaoId(),
+                user.getKakaoNickName(),
+                signInRequest.getDeviceToken()
+        );
     }
 
     @Override
