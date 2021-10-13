@@ -65,3 +65,14 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew build --info
+
+
+      - name: Build Docker Image
+        run: sudo docker build --tag findapple .
+
+      - name: Upload to Registry
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: seogunhee4/dsm-findapple
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
