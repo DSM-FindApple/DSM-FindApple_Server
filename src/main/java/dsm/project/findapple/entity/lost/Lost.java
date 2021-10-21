@@ -4,16 +4,14 @@ import dsm.project.findapple.entity.area.Area;
 import dsm.project.findapple.entity.images.lost.LostImage;
 import dsm.project.findapple.entity.user.User;
 import dsm.project.findapple.payload.enums.Category;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
+@Setter
 @Builder
 @Entity
 @NoArgsConstructor
@@ -41,4 +39,7 @@ public class Lost {
 
     @Enumerated(value = EnumType.STRING)
     private Category category;
+
+    @OneToMany(mappedBy = "lost")
+    private List<LostImage> lostImages;
 }

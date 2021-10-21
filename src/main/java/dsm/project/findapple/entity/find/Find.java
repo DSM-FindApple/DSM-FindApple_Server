@@ -41,4 +41,7 @@ public class Find {
 
     @Enumerated(value = EnumType.STRING)
     private Category category;
+
+    @OneToMany(mappedBy = "find")
+    private List<FindImage> findImages;
 }

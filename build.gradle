@@ -16,6 +16,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -29,6 +30,12 @@ dependencies {
 
     //s3 config
     implementation 'org.springframework.cloud:spring-cloud-aws-autoconfigure:2.2.1.RELEASE'
+
+    //한국어 자연어 분석 라이브러리
+    implementation 'com.github.shin285:KOMORAN:3.3.4'
+
+    //commons io
+    implementation group: 'commons-io', name: 'commons-io', version: '2.6'
 }
 
 test {
