@@ -34,8 +34,8 @@ public class AuthServiceImpl implements AuthService {
 
                     refreshTokenRepository.save(
                             RefreshToken.builder()
-                                    .kakaoId(user.getKakaoId())
                                     .refreshToken(refreshToken)
+                                    .kakaoId(user.getKakaoId())
                                     .build()
                     );
 
@@ -73,15 +73,16 @@ public class AuthServiceImpl implements AuthService {
         Area area;
 
         if(tokenResponse == null) {
+            area = Area.builder()
+                    .latitude(signInRequest.getLatitude())
+                    .longitude(signInRequest.getLongitude())
+                    .build();
+
             user = User.builder()
                     .kakaoId(signInRequest.getKakaoId())
                     .kakaoNickName(signInRequest.getKakaoNickName())
                     .point(0)
-                    .build();
-
-            area = Area.builder()
-                    .latitude(signInRequest.getLatitude())
-                    .longitude(signInRequest.getLongitude())
+                    .area(area)
                     .build();
 
             userRepository.save(user);

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -15,9 +16,10 @@ import javax.persistence.Id;
 @AllArgsConstructor
 public class RefreshToken {
     @Id
-    private String refreshToken;
-
     private Long kakaoId;
+
+    @Column(length = 1000)
+    private String refreshToken;
 
     public RefreshToken updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
