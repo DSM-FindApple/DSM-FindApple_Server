@@ -6,10 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Getter
 @Builder
@@ -18,6 +15,7 @@ import javax.persistence.ManyToOne;
 @AllArgsConstructor
 public class DeviceToken {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long tokenId;
 
     private String deviceToken;
