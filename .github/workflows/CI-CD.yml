@@ -42,9 +42,9 @@ jobs:
   CD:
 
     env:
-      FA_URL: ${{secret.FA_URL}}
-      FA_USERNAME: ${{secret_FA_USERNAME}}
-      FA_PASSWORD: ${{secret_FA_PASSWORD}}
+      FA_URL: ${{secrets.FA_URL}}
+      FA_USERNAME: ${{secrets.FA_USERNAME}}
+      FA_PASSWORD: ${{secrets.FA_PASSWORD}}
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
       JWT_PREFIX: ${{ secrets.JWT_PREFIX }}
       JWT_ACCESS: ${{ secrets.JWT_ACCESS }}
