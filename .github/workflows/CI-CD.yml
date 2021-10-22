@@ -40,7 +40,16 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build --info
   CD:
-    
+
+    env:
+      FA_URL: ${{secret.FA_URL}}
+      FA_USERNAME: ${{secret_FA_USERNAME}}
+      FA_PASSWORD: ${{secret_FA_PASSWORD}}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      JWT_PREFIX: ${{ secrets.JWT_PREFIX }}
+      JWT_ACCESS: ${{ secrets.JWT_ACCESS }}
+      JWT_REFRESH: ${{ secrets.JWT_REFRESH }}
+
     runs-on: ubuntu-latest
     needs: CI
     
