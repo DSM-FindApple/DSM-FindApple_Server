@@ -73,20 +73,19 @@ public class AuthServiceImpl implements AuthService {
         Area area;
 
         if(tokenResponse == null) {
-            area = Area.builder()
+            area = areaRepository.save(Area.builder()
                     .latitude(signInRequest.getLatitude())
                     .longitude(signInRequest.getLongitude())
-                    .build();
+                    .build()
+            );
 
-            user = User.builder()
+            user = userRepository.save(User.builder()
                     .kakaoId(signInRequest.getKakaoId())
                     .kakaoNickName(signInRequest.getKakaoNickName())
                     .point(0)
                     .area(area)
-                    .build();
-
-            userRepository.save(user);
-            areaRepository.save(area);
+                    .build()
+            );
         }
 
         if(user == null)
