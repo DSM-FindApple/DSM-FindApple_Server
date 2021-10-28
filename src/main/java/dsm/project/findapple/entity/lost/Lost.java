@@ -1,6 +1,7 @@
 package dsm.project.findapple.entity.lost;
 
 import dsm.project.findapple.entity.area.Area;
+import dsm.project.findapple.entity.comment.Comment;
 import dsm.project.findapple.entity.images.lost.LostImage;
 import dsm.project.findapple.entity.user.User;
 import dsm.project.findapple.payload.enums.Category;
@@ -42,4 +43,7 @@ public class Lost {
 
     @OneToMany(mappedBy = "lost")
     private List<LostImage> lostImages;
+
+    @OneToMany(mappedBy = "lost")
+    private List<Comment> comments;
 }
