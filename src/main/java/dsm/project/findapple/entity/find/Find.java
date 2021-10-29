@@ -1,6 +1,7 @@
 package dsm.project.findapple.entity.find;
 
 import dsm.project.findapple.entity.area.Area;
+import dsm.project.findapple.entity.comment.Comment;
 import dsm.project.findapple.entity.images.find.FindImage;
 import dsm.project.findapple.entity.user.User;
 import dsm.project.findapple.payload.enums.Category;
@@ -42,6 +43,9 @@ public class Find {
     @Enumerated(value = EnumType.STRING)
     private Category category;
 
-    @OneToMany(mappedBy = "find")
+    @OneToMany(mappedBy = "find", cascade = CascadeType.ALL)
     private List<FindImage> findImages;
+
+    @OneToMany(mappedBy = "find", cascade = CascadeType.ALL)
+    private List<Comment> comments;
 }
