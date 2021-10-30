@@ -69,7 +69,7 @@ public class AuthServiceImpl implements AuthService {
                 signInRequest.getDeviceToken()
         );
 
-        User user = null;
+        User user;
         Area area;
 
         if(tokenResponse == null) {
@@ -86,16 +86,15 @@ public class AuthServiceImpl implements AuthService {
                     .area(area)
                     .build()
             );
+
+            return getTokens(
+                    user.getKakaoId(),
+                    user.getKakaoNickName(),
+                    signInRequest.getDeviceToken()
+            );
+        }else {
+            return tokenResponse;
         }
-
-        if(user == null)
-            throw new RuntimeException("sign up failed");
-
-        return getTokens(
-                user.getKakaoId(),
-                user.getKakaoNickName(),
-                signInRequest.getDeviceToken()
-        );
     }
 
     @Override
