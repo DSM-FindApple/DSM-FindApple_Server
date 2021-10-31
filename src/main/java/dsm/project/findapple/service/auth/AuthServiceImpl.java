@@ -100,15 +100,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public TokenResponse refreshToken(String accessToken, String refreshToken) {
         return refreshTokenRepository.findByRefreshToken(refreshToken)
-                .filter(refreshToken1 -> {
-                    if (jwtProvider.isRefreshToken(refreshToken)) {
-                        jwtProvider.getKakaoId(refreshToken);
-                    }
-                    return false;
-                })
+                .filter(refreshToken1 -> jwtProvider.isRefreshToken(refreshToken) && accessToken.equals(jwtProvider.getAccessToken(refreshToken)))
                 .map(refreshToken1 -> {
                     String newAccessToken = jwtProvider.generateAccessToken(refreshToken1.getKakaoId());
-                    String newRefreshToken = jwtProvider.generateRefreshToken(accessToken);
+                    String newRefreshToken = jwtProvider.generateRefreshToken(newAccessToken);
 
                     refreshTokenRepository.save(
                             refreshToken1.updateRefreshToken(newRefreshToken)
@@ -118,7 +113,8 @@ public class AuthServiceImpl implements AuthService {
                             .accessToken(newAccessToken)
                             .refreshToken(newRefreshToken)
                             .build();
-                }).orElseThrow(RuntimeException::new);
+                })
+                .orElseThrow(RuntimeException::new);
     }
 
     @Override

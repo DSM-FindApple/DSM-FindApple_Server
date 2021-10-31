@@ -60,6 +60,14 @@ public class JwtProvider {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("type").equals("refresh_token");
     }
 
+    public String getAccessToken(String token) {
+        if(validateToken(token))
+            throw new RuntimeException("invalid token");
+
+        return Jwts.parser().setSigningKey(secret)
+                .parseClaimsJws(token).getBody().getSubject();
+    }
+
     public Long getKakaoId(String token) {
         if(validateToken(token))
             throw new RuntimeException("invalid token");
