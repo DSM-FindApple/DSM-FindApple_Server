@@ -20,14 +20,14 @@ public class CustomRowMapper {
         @Override
         @SneakyThrows
         public LostResponse mapRow(ResultSet rs, int rowNum) {
-            Long lostId = rs.getLong("lostId");
+            Long lostId = rs.getLong("findId");
             String title = rs.getString("title");
             Category category = Category.values()[rs.getInt("category")];
             String detail = rs.getString("detail");
             Double longitude = rs.getDouble("longitude");
             Double latitude = rs.getDouble("latitude");
             LocalDate writeAt = rs.getDate("writeAt").toLocalDate();
-            LocalDateTime lostAt = rs.getDate("lostAt")
+            LocalDateTime lostAt = rs.getDate("findAt")
                     .toInstant()
                     .atZone(ZoneId.of("Asia/Seoul"))
                     .toLocalDateTime();
