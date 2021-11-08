@@ -9,4 +9,7 @@ import org.springframework.stereotype.Component;
 public class MyQueries {
     @Value("${find.all.by.relation.find}")
     private String findAllByRelation;
+
+    @Value("${find.all.by.relation.lost}")
+    private String findLostAllByRelation;
 }

@@ -41,3 +41,5 @@ out/
 /src/main/resources/*.json
 
 .DS_Store
+
+*.json
