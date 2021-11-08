@@ -12,6 +12,7 @@ import dsm.project.findapple.entity.lost.RelationLostRepository;
 import dsm.project.findapple.entity.user.User;
 import dsm.project.findapple.entity.user.UserRepository;
 import dsm.project.findapple.payload.enums.Category;
+import dsm.project.findapple.payload.request.AreaRequest;
 import dsm.project.findapple.payload.request.UpdateLostRequest;
 import dsm.project.findapple.payload.request.WriteLostRequest;
 import dsm.project.findapple.payload.response.LostResponse;
@@ -23,7 +24,6 @@ import dsm.project.findapple.utils.ValidateImage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -183,17 +183,24 @@ public class LostServiceImpl implements LostService {
     }
 
     @Override
-    public List<LostResponse> readLost(String token, int pageNum) {
+    public List<LostResponse> readLost(String token, int pageNum, AreaRequest areaRequest) {
         userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
                 .orElseThrow(RuntimeException::new);
 
-        Page<Lost> losts = lostRepository.findAll(
-                PageRequest.of(
-                        pageNum,
-                        PAGE_SIZE,
-                        Sort.by(Sort.Direction.DESC, "writeAt")
-                )
-        );
+        Double minusLongitude = areaRequest.getEndLongitude() - areaRequest.getStartLongitude();
+        Double minusLatitude = areaRequest.getStartLatitude() - areaRequest.getEndLatitude();
+
+        Double rightUpLongitude = areaRequest.getStartLongitude() + minusLongitude;
+        Double leftDownLatitude = areaRequest.getStartLatitude() - minusLatitude;
+
+        Page<Lost> losts = lostRepository
+                .findAllByArea_LongitudeGreaterThanEqualAndArea_LongitudeLessThanEqualAndArea_LatitudeGreaterThanEqualAndArea_LatitudeLessThanEqualOrderByWriteAtDesc(
+                        areaRequest.getStartLongitude(),
+                        rightUpLongitude,
+                        areaRequest.getStartLatitude(),
+                        leftDownLatitude,
+                        PageRequest.of(pageNum, PAGE_SIZE)
+                );
 
         return setLostResponses(losts);
     }

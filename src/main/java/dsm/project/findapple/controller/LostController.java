@@ -1,11 +1,13 @@
 package dsm.project.findapple.controller;
 
 import dsm.project.findapple.payload.enums.Category;
+import dsm.project.findapple.payload.request.AreaRequest;
 import dsm.project.findapple.payload.request.UpdateLostRequest;
 import dsm.project.findapple.payload.request.WriteLostRequest;
 import dsm.project.findapple.payload.response.LostResponse;
 import dsm.project.findapple.service.lost.LostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,8 +23,19 @@ public class LostController {
 
     @GetMapping("/{pageNum}")
     public List<LostResponse> getLost(@PathVariable int pageNum,
+                                      @RequestParam Double startLongitude,
+                                      @RequestParam Double startLatitude,
+                                      @RequestParam Double endLongitude,
+                                      @RequestParam Double endLatitude,
                                       @RequestHeader("Authorization") String token) {
-        return lostService.readLost(token, pageNum);
+        return lostService.readLost(token, pageNum,
+                AreaRequest.builder()
+                        .startLatitude(startLongitude)
+                        .startLatitude(startLatitude)
+                        .endLongitude(endLongitude)
+                        .endLatitude(endLatitude)
+                        .build()
+        );
     }
 
     @GetMapping("/search/title/{pageNum}")
@@ -53,7 +66,7 @@ public class LostController {
                           @RequestParam Category category,
                           @RequestParam Double longitude,
                           @RequestParam Double latitude,
-                          @RequestParam LocalDateTime lostAt,
+                          @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime lostAt,
                           @RequestParam List<MultipartFile> images) {
         lostService.writeLost(token,
                     WriteLostRequest.builder()
