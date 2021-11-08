@@ -8,6 +8,8 @@ import dsm.project.findapple.entity.refresh_token.RefreshToken;
 import dsm.project.findapple.entity.refresh_token.RefreshTokenRepository;
 import dsm.project.findapple.entity.user.User;
 import dsm.project.findapple.entity.user.UserRepository;
+import dsm.project.findapple.error.exceptions.InvalidTokenException;
+import dsm.project.findapple.error.exceptions.UserNotFoundException;
 import dsm.project.findapple.payload.request.SignInRequest;
 import dsm.project.findapple.payload.response.TokenResponse;
 import dsm.project.findapple.utils.JwtProvider;
@@ -114,14 +116,14 @@ public class AuthServiceImpl implements AuthService {
                             .refreshToken(newRefreshToken)
                             .build();
                 })
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(InvalidTokenException::new);
     }
 
     @Override
     @Transactional
     public void logout(String token, String deviceToken) {
         User user = userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         deviceTokenRepository.findByDeviceTokenAndUser(deviceToken, user)
                 .orElseThrow(RuntimeException::new);

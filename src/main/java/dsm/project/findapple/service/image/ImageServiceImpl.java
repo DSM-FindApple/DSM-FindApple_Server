@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -23,11 +24,12 @@ public class ImageServiceImpl implements ImageService {
         image.transferTo(new File(fileDir, imageName));
     }
 
+    @SneakyThrows
     @Override
     public void delete(String imageName) {
         File file = new File(fileDir, imageName);
         if(!file.exists())
-            throw new RuntimeException("file not found");
+            throw new FileNotFoundException();
 
         file.delete();
     }
@@ -38,7 +40,7 @@ public class ImageServiceImpl implements ImageService {
         File file = new File(fileDir, imageName);
 
         if(!file.exists())
-            throw new RuntimeException("file not found");
+            throw new FileNotFoundException();
 
         return IOUtils.toByteArray(new FileInputStream(file));
     }

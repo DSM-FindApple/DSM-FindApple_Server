@@ -1,5 +1,6 @@
 package dsm.project.findapple.utils;
 
+import dsm.project.findapple.error.exceptions.InvalidTokenException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,14 +56,14 @@ public class JwtProvider {
 
     public boolean isRefreshToken(String token) {
         if(!validateToken(token))
-            throw new RuntimeException("invalid token");
+            throw new InvalidTokenException();
 
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("type").equals("refresh_token");
     }
 
     public String getAccessToken(String token) {
         if(validateToken(token))
-            throw new RuntimeException("invalid token");
+            throw new InvalidTokenException();
 
         return Jwts.parser().setSigningKey(secret)
                 .parseClaimsJws(token).getBody().getSubject();
@@ -70,7 +71,7 @@ public class JwtProvider {
 
     public Long getKakaoId(String token) {
         if(validateToken(token))
-            throw new RuntimeException("invalid token");
+            throw new InvalidTokenException();
 
         return Long.getLong(Jwts.parser().setSigningKey(secret)
                 .parseClaimsJws(token).getBody().getSubject());

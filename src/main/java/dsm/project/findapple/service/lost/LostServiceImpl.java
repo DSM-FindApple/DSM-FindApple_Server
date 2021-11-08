@@ -11,6 +11,8 @@ import dsm.project.findapple.entity.lost.LostRepository;
 import dsm.project.findapple.entity.lost.RelationLostRepository;
 import dsm.project.findapple.entity.user.User;
 import dsm.project.findapple.entity.user.UserRepository;
+import dsm.project.findapple.error.exceptions.LostNotFoundException;
+import dsm.project.findapple.error.exceptions.UserNotFoundException;
 import dsm.project.findapple.payload.enums.Category;
 import dsm.project.findapple.payload.request.UpdateLostRequest;
 import dsm.project.findapple.payload.request.WriteLostRequest;
@@ -102,7 +104,7 @@ public class LostServiceImpl implements LostService {
     @Override
     public void writeLost(String token, WriteLostRequest writeLostRequest) {
         User user = userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         Area area = areaRepository.save(
                 Area.builder()
@@ -140,10 +142,10 @@ public class LostServiceImpl implements LostService {
     @Override
     public void updateLost(String token, Long lostId, UpdateLostRequest updateLostRequest) {
         userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         Lost lost = lostRepository.findAllByLostId(lostId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(LostNotFoundException::new);
 
         setIfNotNull(lost::setTitle, updateLostRequest.getTitle());
         setIfNotNull(lost::setDetailInfo, updateLostRequest.getDetail());
@@ -158,10 +160,10 @@ public class LostServiceImpl implements LostService {
     @Override
     public void updateLostImage(String token, Long lostId, List<MultipartFile> lostImages) {
         userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         Lost lost = lostRepository.findAllByLostId(lostId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(LostNotFoundException::new);
 
         lost.getLostImages().forEach(lostImage -> {
             s3Service.delete(lostImage.getLostImageName());
@@ -185,7 +187,7 @@ public class LostServiceImpl implements LostService {
     @Override
     public List<LostResponse> readLost(String token, int pageNum) {
         userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         Page<Lost> losts = lostRepository.findAll(
                 PageRequest.of(
@@ -201,7 +203,7 @@ public class LostServiceImpl implements LostService {
     @Override
     public List<LostResponse> searchLostByTitle(String token, String title, int pageNum) {
         userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         Page<Lost> losts = lostRepository.findAllByTitleContaining(title, PageRequest.of(pageNum, PAGE_SIZE));
 
@@ -211,7 +213,7 @@ public class LostServiceImpl implements LostService {
     @Override
     public List<LostResponse> searchLostByCategory(String token, Category category, int pageNum) {
         userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         Page<Lost> losts = lostRepository.findAllByCategory(category, PageRequest.of(pageNum, PAGE_SIZE));
 
@@ -221,7 +223,7 @@ public class LostServiceImpl implements LostService {
     @Override
     public List<LostResponse> readRelationLost(String token, String title, int pageNum) {
         userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         List<String> keywords = koreanDecoder.decodeKorean(title);
         StringBuilder addSql = new StringBuilder(" l.title LIKE '%" + keywords.get(0) + "%'");
@@ -263,13 +265,23 @@ public class LostServiceImpl implements LostService {
     }
 
     @Override
+    public List<LostResponse> getMyLost(String token, int pageNum) {
+        User user = userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
+                .orElseThrow(UserNotFoundException::new);
+
+        Page<Lost> losts = lostRepository.findAllByUser(user, PageRequest.of(pageNum, PAGE_SIZE));
+
+        return setLostResponses(losts);
+    }
+
+    @Override
     @Transactional
     public void deleteLost(String token, Long lostId) {
         userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         lostRepository.findAllByLostId(lostId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(LostNotFoundException::new);
 
         lostRepository.deleteByLostId(lostId);
     }
