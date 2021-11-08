@@ -102,7 +102,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public TokenResponse refreshToken(String accessToken, String refreshToken) {
         return refreshTokenRepository.findByRefreshToken(refreshToken)
-                .filter(refreshToken1 -> jwtProvider.isRefreshToken(refreshToken) && accessToken.equals(jwtProvider.getAccessToken(refreshToken)))
+                .filter(refreshToken1 -> jwtProvider.getAccessToken(refreshToken1.getRefreshToken()).equals(accessToken))
                 .map(refreshToken1 -> {
                     String newAccessToken = jwtProvider.generateAccessToken(refreshToken1.getKakaoId());
                     String newRefreshToken = jwtProvider.generateRefreshToken(newAccessToken);
