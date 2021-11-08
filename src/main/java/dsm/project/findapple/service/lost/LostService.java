@@ -17,5 +17,6 @@ public interface LostService {
     List<LostResponse> searchLostByTitle(String token, String title, int pageNum);
     List<LostResponse> searchLostByCategory(String token, Category category, int pageNum);
     List<LostResponse> readRelationLost(String token, String title,  int pageNum);
+    List<LostResponse> getMyLost(String token, int pageNum);
     void deleteLost(String token, Long lostId);
 }

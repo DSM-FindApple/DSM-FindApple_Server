@@ -59,6 +59,12 @@ public class LostController {
         return lostService.readRelationLost(token, title, pageNum);
     }
 
+    @GetMapping("/me/{pageNum}")
+    public List<LostResponse> getMyLost(@PathVariable int pageNum,
+                                        @RequestHeader("Authorization") String token) {
+        return lostService.getMyLost(token, pageNum);
+    }
+
     @PostMapping
     public void writeLost(@RequestHeader("Authorization") String token,
                           @RequestParam String title,

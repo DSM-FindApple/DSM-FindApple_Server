@@ -270,6 +270,16 @@ public class LostServiceImpl implements LostService {
     }
 
     @Override
+    public List<LostResponse> getMyLost(String token, int pageNum) {
+        User user = userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
+                .orElseThrow(RuntimeException::new);
+
+        Page<Lost> losts = lostRepository.findAllByUser(user, PageRequest.of(pageNum, PAGE_SIZE));
+
+        return setLostResponses(losts);
+    }
+
+    @Override
     @Transactional
     public void deleteLost(String token, Long lostId) {
         userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
