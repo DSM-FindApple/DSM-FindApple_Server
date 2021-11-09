@@ -55,14 +55,18 @@ public class JwtProvider {
     }
 
     public boolean isRefreshToken(String token) {
-        if(!validateToken(token))
+        if(validateToken(token))
             throw new InvalidTokenException();
 
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("type").equals("refresh_token");
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token)
+                .getBody().get("type").equals("refresh_token");
     }
 
     public String getAccessToken(String token) {
         if(validateToken(token))
+            throw new InvalidTokenException();
+
+        if(!isRefreshToken(token))
             throw new InvalidTokenException();
 
         return Jwts.parser().setSigningKey(secret)

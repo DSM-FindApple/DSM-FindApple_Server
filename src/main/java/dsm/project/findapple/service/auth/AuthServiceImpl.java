@@ -14,11 +14,13 @@ import dsm.project.findapple.payload.request.SignInRequest;
 import dsm.project.findapple.payload.response.TokenResponse;
 import dsm.project.findapple.utils.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
@@ -102,7 +104,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public TokenResponse refreshToken(String accessToken, String refreshToken) {
         return refreshTokenRepository.findByRefreshToken(refreshToken)
-                .filter(refreshToken1 -> jwtProvider.isRefreshToken(refreshToken) && accessToken.equals(jwtProvider.getAccessToken(refreshToken)))
+                .filter(refreshToken1 -> jwtProvider.getAccessToken(refreshToken1.getRefreshToken()).equals(accessToken))
                 .map(refreshToken1 -> {
                     String newAccessToken = jwtProvider.generateAccessToken(refreshToken1.getKakaoId());
                     String newRefreshToken = jwtProvider.generateRefreshToken(newAccessToken);
