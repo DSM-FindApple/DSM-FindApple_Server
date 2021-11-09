@@ -66,7 +66,7 @@ public class JwtProvider {
         if(validateToken(token))
             throw new InvalidTokenException();
 
-        if(isRefreshToken(token))
+        if(!isRefreshToken(token))
             throw new InvalidTokenException();
 
         return Jwts.parser().setSigningKey(secret)
