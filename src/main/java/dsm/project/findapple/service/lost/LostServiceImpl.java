@@ -4,6 +4,7 @@ import dsm.project.findapple.entity.area.Area;
 import dsm.project.findapple.entity.area.AreaRepository;
 import dsm.project.findapple.entity.comment.Comment;
 import dsm.project.findapple.entity.comment.repository.CommentRepository;
+import dsm.project.findapple.entity.images.find.FindImageRepository;
 import dsm.project.findapple.entity.images.lost.LostImage;
 import dsm.project.findapple.entity.images.lost.LostImageRepository;
 import dsm.project.findapple.entity.lost.Lost;
@@ -17,6 +18,7 @@ import dsm.project.findapple.payload.enums.Category;
 import dsm.project.findapple.payload.request.AreaRequest;
 import dsm.project.findapple.payload.request.UpdateLostRequest;
 import dsm.project.findapple.payload.request.WriteLostRequest;
+import dsm.project.findapple.payload.response.FindResponse;
 import dsm.project.findapple.payload.response.LostResponse;
 import dsm.project.findapple.payload.response.TopCommentResponse;
 import dsm.project.findapple.service.image.ImageService;
@@ -42,6 +44,7 @@ public class LostServiceImpl implements LostService {
 
     private final LostRepository lostRepository;
     private final LostImageRepository lostImageRepository;
+    private final FindImageRepository findImageRepository;
     private final UserRepository userRepository;
     private final AreaRepository areaRepository;
     private final RelationLostRepository relationLostRepository;
@@ -102,6 +105,7 @@ public class LostServiceImpl implements LostService {
     }
 
     @Override
+    @Transactional
     public void writeLost(String token, WriteLostRequest writeLostRequest) {
         User user = userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
                 .orElseThrow(UserNotFoundException::new);
@@ -141,11 +145,14 @@ public class LostServiceImpl implements LostService {
 
     @Override
     public void updateLost(String token, Long lostId, UpdateLostRequest updateLostRequest) {
-        userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
+        User user = userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
                 .orElseThrow(UserNotFoundException::new);
 
         Lost lost = lostRepository.findAllByLostId(lostId)
                 .orElseThrow(LostNotFoundException::new);
+
+        if(lost.getUser().equals(user))
+            throw new LostNotFoundException();
 
         setIfNotNull(lost::setTitle, updateLostRequest.getTitle());
         setIfNotNull(lost::setDetailInfo, updateLostRequest.getDetail());
@@ -228,7 +235,7 @@ public class LostServiceImpl implements LostService {
     }
 
     @Override
-    public List<LostResponse> readRelationLost(String token, String title, int pageNum) {
+    public List<FindResponse> readRelationLost(String token, String title, int pageNum) {
         userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
                 .orElseThrow(UserNotFoundException::new);
 
@@ -240,18 +247,18 @@ public class LostServiceImpl implements LostService {
             addSql.append(" OR l.title LIKE '%").append(keyword).append("%'");
         }
 
-        List<LostResponse> lostResponses = relationLostRepository.findAllByRelation(
+        List<FindResponse> findResponses = relationLostRepository.findAllByRelation(
                 String.valueOf(addSql),
                 dsm.project.findapple.utils.Page.of(pageNum, PAGE_SIZE)
         );
 
-        for(LostResponse lostResponse : lostResponses) {
-            Comment comment = commentRepository.findByLost_LostIdOrderByWriteAtDesc(lostResponse.getLostId())
+        for(FindResponse lostResponse : findResponses) {
+            Comment comment = commentRepository.findTop1ByFind_FindIdOrderByWriteAtDesc(lostResponse.getFindId())
                     .orElse(null);
 
-            List<String> images = lostImageRepository.getImageNames(lostResponse.getLostId());
+            List<String> images = findImageRepository.getImageNames(lostResponse.getFindId());
 
-            lostResponse.setLostImages(images);
+            lostResponse.setFindImages(images);
             if(comment != null) {
                 lostResponse.setTopComment(
                         TopCommentResponse.builder()
@@ -268,7 +275,7 @@ public class LostServiceImpl implements LostService {
             }
         }
 
-        return lostResponses;
+        return findResponses;
     }
 
     @Override

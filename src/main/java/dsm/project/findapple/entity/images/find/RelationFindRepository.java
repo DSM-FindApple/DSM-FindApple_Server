@@ -1,6 +1,6 @@
-package dsm.project.findapple.entity.lost;
+package dsm.project.findapple.entity.images.find;
 
-import dsm.project.findapple.payload.response.FindResponse;
+import dsm.project.findapple.payload.response.LostResponse;
 import dsm.project.findapple.utils.MyQueries;
 import dsm.project.findapple.utils.Page;
 import lombok.RequiredArgsConstructor;
@@ -16,25 +16,25 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Repository
-@Slf4j
 @RequiredArgsConstructor
-public class RelationLostRepository {
+@Slf4j
+public class RelationFindRepository {
 
     private final NamedParameterJdbcTemplate template;
     private final MyQueries myQueries;
-    private final RowMapper<FindResponse> mapper;
+    private final RowMapper<LostResponse> mapper;
 
     @Transactional
-    public List<FindResponse> findAllByRelation(String addQuery, Page page) {
-        String sql = myQueries.getFindAllByRelation() + addQuery
+    public List<LostResponse> findAllByRelation(String addQuery, Page page) {
+        String sql = myQueries.getFindLostAllByRelation() + addQuery
                 + "ORDER BY l.write_at, l.lost_at DESC LIMIT :limit OFFSET :offset";
 
         log.info(sql);
 
-        Map<String, Object> params = new HashMap<>();
-        params.put("limit", page.getLimit());
-        params.put("offset", page.getOffset());
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("offset", page.getOffset());
+        paramMap.put("limit", page.getLimit());
 
-        return template.queryForStream(sql, params, mapper).collect(Collectors.toList());
+        return template.queryForStream(sql, paramMap, mapper).collect(Collectors.toList());
     }
 }

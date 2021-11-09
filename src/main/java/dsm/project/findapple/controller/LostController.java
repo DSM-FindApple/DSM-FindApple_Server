@@ -4,6 +4,7 @@ import dsm.project.findapple.payload.enums.Category;
 import dsm.project.findapple.payload.request.AreaRequest;
 import dsm.project.findapple.payload.request.UpdateLostRequest;
 import dsm.project.findapple.payload.request.WriteLostRequest;
+import dsm.project.findapple.payload.response.FindResponse;
 import dsm.project.findapple.payload.response.LostResponse;
 import dsm.project.findapple.service.lost.LostService;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +54,7 @@ public class LostController {
     }
 
     @GetMapping("/relation/{pageNum}")
-    public List<LostResponse> getRelation(@PathVariable int pageNum,
+    public List<FindResponse> getRelation(@PathVariable int pageNum,
                                           @RequestParam String title,
                                           @RequestHeader("Authorization") String token) {
         return lostService.readRelationLost(token, title, pageNum);
