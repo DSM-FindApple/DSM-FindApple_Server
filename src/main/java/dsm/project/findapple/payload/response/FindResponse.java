@@ -23,6 +23,7 @@ public class FindResponse {
     private LocalDateTime findAt;
     private Long kakaoId;
     private String findUser;
+    private String profileUrl;
     private TopCommentResponse topComment;
     private List<String> findImages;
 }

@@ -24,6 +24,8 @@ public class User {
 
     private Integer point;
 
+    private String profileUrl;
+
     @OneToMany(mappedBy = "user")
     private List<Lost> losts;
 
@@ -36,6 +38,24 @@ public class User {
 
     public User updateUserName(String kakaoNickName) {
         this.kakaoNickName = kakaoNickName;
+
+        return this;
+    }
+
+    public User updateProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
+
+        return this;
+    }
+
+    public User upPoint(Integer point) {
+        this.point += point;
+
+        return this;
+    }
+
+    public User downPoint(Integer point) {
+        this.point -= point;
 
         return this;
     }
