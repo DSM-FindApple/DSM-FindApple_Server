@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/find")
 @RequiredArgsConstructor
 public class FindController {

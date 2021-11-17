@@ -23,6 +23,7 @@ public class LostResponse {
     private LocalDateTime lostAt;
     private Long kakaoId;
     private String lostUser;
+    private String profileUrl;
     private TopCommentResponse topComment;
     private List<String> lostImages;
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 public class SignInRequest {
     private Long kakaoId;
     private String kakaoNickName;
+    private String profileUrl;
     private String deviceToken;
     private Double longitude;
     private Double latitude;

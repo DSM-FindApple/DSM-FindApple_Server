@@ -30,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final JwtProvider jwtProvider;
 
-    private TokenResponse getTokens(Long kakaoId, String kakaoNickName, String deviceToken) {
+    private TokenResponse getTokens(Long kakaoId, String kakaoNickName, String profileUrl, String deviceToken) {
         return userRepository.findByKakaoId(kakaoId)
                 .map(user -> {
                     String accessToken = jwtProvider.generateAccessToken(user.getKakaoId());
@@ -46,6 +46,12 @@ public class AuthServiceImpl implements AuthService {
                     if(!user.getKakaoNickName().equals(kakaoNickName)) {
                         userRepository.save(
                                 user.updateUserName(kakaoNickName)
+                        );
+                    }
+
+                    if(!user.getProfileUrl().equals(profileUrl)) {
+                        userRepository.save(
+                                user.updateProfileUrl(profileUrl)
                         );
                     }
 
@@ -70,6 +76,7 @@ public class AuthServiceImpl implements AuthService {
         TokenResponse tokenResponse = getTokens(
                 signInRequest.getKakaoId(),
                 signInRequest.getKakaoNickName(),
+                signInRequest.getProfileUrl(),
                 signInRequest.getDeviceToken()
         );
 
@@ -88,12 +95,14 @@ public class AuthServiceImpl implements AuthService {
                     .kakaoNickName(signInRequest.getKakaoNickName())
                     .point(0)
                     .area(area)
+                    .profileUrl(signInRequest.getProfileUrl())
                     .build()
             );
 
             return getTokens(
                     user.getKakaoId(),
                     user.getKakaoNickName(),
+                    user.getProfileUrl(),
                     signInRequest.getDeviceToken()
             );
         }else {

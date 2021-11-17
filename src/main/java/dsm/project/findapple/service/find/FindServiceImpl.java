@@ -80,6 +80,7 @@ public class FindServiceImpl implements FindService {
                             .kakaoId(find.getUser().getKakaoId())
                             .latitude(find.getArea().getLatitude())
                             .longitude(find.getArea().getLongitude())
+                            .profileUrl(find.getUser().getProfileUrl())
                             .title(find.getTitle())
                             .topComment(
                                     TopCommentResponse.builder()
@@ -133,6 +134,7 @@ public class FindServiceImpl implements FindService {
             );
         });
 
+        userRepository.save(user.upPoint(1));
         findImageRepository.saveAll(findImages);
     }
 
