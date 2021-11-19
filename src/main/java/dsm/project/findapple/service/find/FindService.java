@@ -14,6 +14,7 @@ public interface FindService {
     void writeFind(String token, WriteFindRequest writeFindRequest);
     void updateFind(String token, Long findId, UpdateFindRequest updateFindRequest);
     void updateFindImage(String token, Long findId, List<MultipartFile> findImages);
+    List<FindResponse> getFindByArea(String token, AreaRequest areaRequest);
     List<FindResponse> readFind(String token, int pageNum, AreaRequest areaRequest);
     List<FindResponse> searchFindByTitle(String token, String title, int pageNum);
     List<FindResponse> searchFindByCategory(String token, Category category, int pageNum);

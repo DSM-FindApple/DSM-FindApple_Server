@@ -20,5 +20,6 @@ public interface FindRepository extends JpaRepository<Find, Long> {
     void deleteByFindId(Long findId);
     int countAllByUser(User user);
     Page<Find> findAllByArea_LongitudeGreaterThanEqualAndArea_LongitudeLessThanEqualAndArea_LatitudeGreaterThanEqualAndArea_LatitudeLessThanEqualOrderByWriteAtDesc(Double area_longitude, Double area_longitude2, Double area_latitude, Double area_latitude2, Pageable pageable);
+    List<Find> findAllByArea_LongitudeGreaterThanEqualAndArea_LongitudeLessThanEqualAndArea_LatitudeGreaterThanEqualAndArea_LatitudeLessThanEqualOrderByWriteAtDesc(Double area_longitude, Double area_longitude2, Double area_latitude, Double area_latitude2);
     Page<Find> findAll(Pageable pageable);
 }

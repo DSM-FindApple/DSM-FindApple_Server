@@ -23,6 +23,23 @@ public class LostController {
 
     private final LostService lostService;
 
+    @GetMapping("/map")
+    public List<LostResponse> getLostByArea(@RequestHeader("Authorization") String token,
+                                            @RequestParam Double startLongitude,
+                                            @RequestParam Double startLatitude,
+                                            @RequestParam Double endLongitude,
+                                            @RequestParam Double endLatitude) {
+        return lostService.getLostByArea(
+                token,
+                AreaRequest.builder()
+                        .startLatitude(startLongitude)
+                        .startLatitude(startLatitude)
+                        .endLongitude(endLongitude)
+                        .endLatitude(endLatitude)
+                        .build()
+        );
+    }
+
     @GetMapping("/{pageNum}")
     public List<LostResponse> getLost(@PathVariable int pageNum,
                                       @RequestParam Double startLongitude,

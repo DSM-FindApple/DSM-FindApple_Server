@@ -59,7 +59,7 @@ public class FindServiceImpl implements FindService {
             setter.accept(value);
     }
 
-    private List<FindResponse> setFindResponse(Page<Find> findPage) {
+    private List<FindResponse> setFindResponse(List<Find> findPage) {
         List<FindResponse> responses = new ArrayList<>();
 
         for (Find find : findPage) {
@@ -185,6 +185,27 @@ public class FindServiceImpl implements FindService {
     }
 
     @Override
+    public List<FindResponse> getFindByArea(String token, AreaRequest areaRequest) {
+        userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
+                .orElseThrow(UserNotFoundException::new);
+
+        Double minusLongitude = areaRequest.getEndLongitude() - areaRequest.getStartLongitude();
+        Double minusLatitude = areaRequest.getStartLatitude() - areaRequest.getEndLatitude();
+
+        Double rightUpLongitude = areaRequest.getStartLongitude() + minusLongitude;
+        Double leftDownLatitude = areaRequest.getStartLatitude() - minusLatitude;
+
+        List<Find> finds = findRepository.findAllByArea_LongitudeGreaterThanEqualAndArea_LongitudeLessThanEqualAndArea_LatitudeGreaterThanEqualAndArea_LatitudeLessThanEqualOrderByWriteAtDesc(
+                areaRequest.getStartLongitude(),
+                rightUpLongitude,
+                areaRequest.getStartLatitude(),
+                leftDownLatitude
+        );
+
+        return setFindResponse(finds);
+    }
+
+    @Override
     public List<FindResponse> readFind(String token, int pageNum, AreaRequest areaRequest) {
         userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
                 .orElseThrow(UserNotFoundException::new);
@@ -204,7 +225,7 @@ public class FindServiceImpl implements FindService {
                         PageRequest.of(pageNum, PAGE_SIZE)
                 );
 
-        return setFindResponse(findPage);
+        return setFindResponse(findPage.toList());
     }
 
     @Override
@@ -214,7 +235,7 @@ public class FindServiceImpl implements FindService {
 
         Page<Find> findPage = findRepository.findAllByTitleContaining(title, PageRequest.of(pageNum, PAGE_SIZE));
 
-        return setFindResponse(findPage);
+        return setFindResponse(findPage.toList());
     }
 
     @Override
@@ -224,7 +245,7 @@ public class FindServiceImpl implements FindService {
 
         Page<Find> findPage = findRepository.findAllByCategory(category, PageRequest.of(pageNum, PAGE_SIZE));
 
-        return setFindResponse(findPage);
+        return setFindResponse(findPage.toList());
     }
 
     @Override
@@ -278,7 +299,7 @@ public class FindServiceImpl implements FindService {
 
         Page<Find> findPage = findRepository.findAllByUser(user, PageRequest.of(pageNum, PAGE_SIZE));
 
-        return setFindResponse(findPage);
+        return setFindResponse(findPage.toList());
     }
 
     @Override

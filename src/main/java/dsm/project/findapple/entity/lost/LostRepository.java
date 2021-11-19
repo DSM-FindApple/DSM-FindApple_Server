@@ -18,6 +18,7 @@ public interface LostRepository extends JpaRepository<Lost, Long> {
     Page<Lost> findAllByTitleContaining(String title, Pageable pageable);
     void deleteByLostId(Long lostId);
     Page<Lost> findAllByArea_LongitudeGreaterThanEqualAndArea_LongitudeLessThanEqualAndArea_LatitudeGreaterThanEqualAndArea_LatitudeLessThanEqualOrderByWriteAtDesc(Double area_longitude, Double area_longitude2, Double area_latitude, Double area_latitude2, Pageable pageable);
+    List<Lost> findAllByArea_LongitudeGreaterThanEqualAndArea_LongitudeLessThanEqualAndArea_LatitudeGreaterThanEqualAndArea_LatitudeLessThanEqualOrderByWriteAtDesc(Double area_longitude, Double area_longitude2, Double area_latitude, Double area_latitude2);
     Page<Lost> findAll(Pageable pageable);
     int countAllByUser(User user);
     List<Lost> findAllByUser(User user);

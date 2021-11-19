@@ -14,6 +14,7 @@ public interface LostService {
     void writeLost(String token, WriteLostRequest writeLostRequest);
     void updateLost(String token, Long lostId, UpdateLostRequest updateLostRequest);
     void updateLostImage(String token, Long lostId, List<MultipartFile> lostImages);
+    List<LostResponse> getLostByArea(String token , AreaRequest areaRequest);
     List<LostResponse> readLost(String token, int pageNum, AreaRequest areaRequest);
     List<LostResponse> searchLostByTitle(String token, String title, int pageNum);
     List<LostResponse> searchLostByCategory(String token, Category category, int pageNum);

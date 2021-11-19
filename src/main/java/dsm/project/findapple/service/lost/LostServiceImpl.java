@@ -62,7 +62,7 @@ public class LostServiceImpl implements LostService {
             setter.accept(value);
     }
 
-    private List<LostResponse> setLostResponses(Page<Lost> losts) {
+    private List<LostResponse> setLostResponses(List<Lost> losts) {
         List<LostResponse> lostResponses = new ArrayList<>();
 
         losts.forEach(lost -> {
@@ -192,6 +192,28 @@ public class LostServiceImpl implements LostService {
     }
 
     @Override
+    public List<LostResponse> getLostByArea(String token, AreaRequest areaRequest) {
+        userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
+                .orElseThrow(UserNotFoundException::new);
+
+        Double minusLongitude = areaRequest.getEndLongitude() - areaRequest.getStartLongitude();
+        Double minusLatitude = areaRequest.getStartLatitude() - areaRequest.getEndLatitude();
+
+        Double rightUpLongitude = areaRequest.getStartLongitude() + minusLongitude;
+        Double leftDownLatitude = areaRequest.getStartLatitude() - minusLatitude;
+
+        List<Lost> losts = lostRepository
+                .findAllByArea_LongitudeGreaterThanEqualAndArea_LongitudeLessThanEqualAndArea_LatitudeGreaterThanEqualAndArea_LatitudeLessThanEqualOrderByWriteAtDesc(
+                        areaRequest.getStartLongitude(),
+                        rightUpLongitude,
+                        areaRequest.getStartLatitude(),
+                        leftDownLatitude
+                );
+
+        return setLostResponses(losts);
+    }
+
+    @Override
     public List<LostResponse> readLost(String token, int pageNum, AreaRequest areaRequest) {
         userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
                 .orElseThrow(UserNotFoundException::new);
@@ -211,7 +233,7 @@ public class LostServiceImpl implements LostService {
                         PageRequest.of(pageNum, PAGE_SIZE)
                 );
 
-        return setLostResponses(losts);
+        return setLostResponses(losts.toList());
     }
 
     @Override
@@ -221,7 +243,7 @@ public class LostServiceImpl implements LostService {
 
         Page<Lost> losts = lostRepository.findAllByTitleContaining(title, PageRequest.of(pageNum, PAGE_SIZE));
 
-        return setLostResponses(losts);
+        return setLostResponses(losts.toList());
     }
 
     @Override
@@ -231,7 +253,7 @@ public class LostServiceImpl implements LostService {
 
         Page<Lost> losts = lostRepository.findAllByCategory(category, PageRequest.of(pageNum, PAGE_SIZE));
 
-        return setLostResponses(losts);
+        return setLostResponses(losts.toList());
     }
 
     @Override
@@ -285,7 +307,7 @@ public class LostServiceImpl implements LostService {
 
         Page<Lost> losts = lostRepository.findAllByUser(user, PageRequest.of(pageNum, PAGE_SIZE));
 
-        return setLostResponses(losts);
+        return setLostResponses(losts.toList());
     }
 
     @Override

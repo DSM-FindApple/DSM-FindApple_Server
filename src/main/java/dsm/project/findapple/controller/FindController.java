@@ -23,6 +23,23 @@ public class FindController {
 
     private final FindService findService;
 
+    @GetMapping("/map")
+    public List<FindResponse> getFindMap(@RequestHeader("Authorization") String token,
+                                         @RequestParam Double startLongitude,
+                                         @RequestParam Double startLatitude,
+                                         @RequestParam Double endLongitude,
+                                         @RequestParam Double endLatitude) {
+        return findService.getFindByArea(
+                token,
+                AreaRequest.builder()
+                        .endLatitude(endLatitude)
+                        .endLongitude(endLongitude)
+                        .startLatitude(startLatitude)
+                        .startLongitude(startLongitude)
+                        .build()
+        );
+    }
+
     @GetMapping("/{pageNum}")
     public List<FindResponse> getFindByArea(@PathVariable int pageNum,
                                             @RequestParam Double startLongitude,
