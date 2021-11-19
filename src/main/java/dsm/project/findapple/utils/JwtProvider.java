@@ -77,7 +77,7 @@ public class JwtProvider {
         if(validateToken(token))
             throw new InvalidTokenException();
 
-        return Long.getLong(Jwts.parser().setSigningKey(secret)
+        return Long.parseLong(Jwts.parser().setSigningKey(secret)
                 .parseClaimsJws(token).getBody().getSubject());
     }
 }
