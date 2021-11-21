@@ -37,4 +37,10 @@ public class Message {
 
     @Enumerated(value = EnumType.STRING)
     private MessageType messageType;
+
+    public Message updateMessage(String message) {
+        this.message = message;
+
+        return this;
+    }
 }
