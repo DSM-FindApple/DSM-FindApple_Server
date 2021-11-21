@@ -3,15 +3,13 @@ package dsm.project.findapple.entity.promise;
 import dsm.project.findapple.entity.area.Area;
 import dsm.project.findapple.entity.message.Message;
 import dsm.project.findapple.entity.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @Builder
 @Entity
 @NoArgsConstructor
@@ -42,4 +40,10 @@ public class Promise {
     @OneToOne
     @JoinColumn(name = "message")
     private Message message;
+
+    public Promise updateIsAccept(Boolean isAccept) {
+        this.isAccept = isAccept;
+
+        return this;
+    }
 }
