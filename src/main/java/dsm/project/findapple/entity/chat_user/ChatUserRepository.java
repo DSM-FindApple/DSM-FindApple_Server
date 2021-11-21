@@ -13,4 +13,5 @@ import java.util.Optional;
 public interface ChatUserRepository extends JpaRepository<ChatUser, Long> {
     Page<ChatUser> findAllByUser(User user, Pageable pageable);
     Optional<ChatUser> findByChatAndUserNot(Chat chat, User user);
+    Optional<ChatUser> findByChatAndUser(Chat chat, User user);
 }
