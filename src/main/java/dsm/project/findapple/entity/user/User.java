@@ -1,6 +1,8 @@
 package dsm.project.findapple.entity.user;
 
 import dsm.project.findapple.entity.area.Area;
+import dsm.project.findapple.entity.ban_user.BanUser;
+import dsm.project.findapple.entity.chat_user.ChatUser;
 import dsm.project.findapple.entity.find.Find;
 import dsm.project.findapple.entity.lost.Lost;
 import lombok.AllArgsConstructor;
@@ -26,11 +28,17 @@ public class User {
 
     private String profileUrl;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Lost> losts;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Find> finds;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<ChatUser> chatUsers;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<BanUser> banUsers;
 
     @OneToOne
     @JoinColumn(name = "visit_area")

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter
@@ -32,9 +33,7 @@ public class Message {
 
     private String message;
 
-    private LocalTime sendTime;
-
-    private LocalDate sendDate;
+    private LocalDateTime sendAt;
 
     @Enumerated(value = EnumType.STRING)
     private MessageType messageType;
