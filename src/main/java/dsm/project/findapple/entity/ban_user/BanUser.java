@@ -1,6 +1,5 @@
-package dsm.project.findapple.entity.chat_user;
+package dsm.project.findapple.entity.ban_user;
 
-import dsm.project.findapple.entity.chat.Chat;
 import dsm.project.findapple.entity.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,22 +7,25 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatUser {
+public class BanUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long chatUserId;
+    private Long banId;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "kakao_id")
     private User user;
 
-    @OneToOne
-    @JoinColumn(name = "chat_id")
-    private Chat chat;
+    @ManyToOne
+    @JoinColumn(name = "ban_user_id")
+    private User banUser;
+
+    private LocalDateTime banedAt;
 }
