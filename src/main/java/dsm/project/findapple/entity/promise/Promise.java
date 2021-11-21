@@ -1,6 +1,7 @@
 package dsm.project.findapple.entity.promise;
 
 import dsm.project.findapple.entity.area.Area;
+import dsm.project.findapple.entity.message.Message;
 import dsm.project.findapple.entity.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,4 +38,8 @@ public class Promise {
     @OneToOne
     @JoinColumn(name = "area_code")
     private Area area;
+
+    @OneToOne
+    @JoinColumn(name = "message")
+    private Message message;
 }
