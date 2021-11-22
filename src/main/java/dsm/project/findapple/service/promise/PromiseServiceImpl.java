@@ -11,7 +11,7 @@ import dsm.project.findapple.entity.promise.Promise;
 import dsm.project.findapple.entity.promise.PromiseRepository;
 import dsm.project.findapple.entity.user.User;
 import dsm.project.findapple.entity.user.UserRepository;
-import dsm.project.findapple.error.exceptions.UserNotFoundException;
+import dsm.project.findapple.error.exceptions.*;
 import dsm.project.findapple.payload.enums.MessageType;
 import dsm.project.findapple.payload.request.PromiseRequest;
 import dsm.project.findapple.payload.request.UpdatePromiseRequest;
@@ -54,10 +54,10 @@ public class PromiseServiceImpl implements PromiseService {
                 .orElseThrow(UserNotFoundException::new);
 
         Chat chat = chatRepository.findByChatId(chatId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(ChatNotFoundException::new);
 
         chatUserRepository.findByChatAndUser(chat, user)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(ChatUserNotFoundException::new);
 
         Message message = messageRepository.save(
                 Message.builder()
@@ -126,7 +126,7 @@ public class PromiseServiceImpl implements PromiseService {
                 .orElseThrow(UserNotFoundException::new);
 
         Promise promise = promiseRepository.findByPromiseId(promiseId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(PromiseNotFoundException::new);
 
         return PromiseResponse.builder()
                         .chatId(promise.getMessage().getChat().getChatId())
@@ -147,10 +147,10 @@ public class PromiseServiceImpl implements PromiseService {
                 .orElseThrow(UserNotFoundException::new);
 
         Promise promise = promiseRepository.findByPromiseId(promiseId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(PromiseNotFoundException::new);
 
-        if (!promise.getUser().equals(user))
-            throw new RuntimeException();
+        if (!promise.getTarget().equals(user))
+            throw new NotYourException();
 
         promiseRepository.save(promise.updateIsAccept(isAccept));
     }
@@ -161,16 +161,16 @@ public class PromiseServiceImpl implements PromiseService {
                 .orElseThrow(UserNotFoundException::new);
 
         Chat chat = chatRepository.findByChatId(chatId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(ChatNotFoundException::new);
 
         chatUserRepository.findByChatAndUser(chat, user)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(ChatUserNotFoundException::new);
 
         Promise promise = promiseRepository.findByPromiseId(promiseId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(PromiseNotFoundException::new);
 
         if (!promise.getUser().equals(user))
-            throw new RuntimeException();
+            throw new NotYourException();
 
         setIfNotSame(promise::setScript, updatePromiseRequest.getScript(), promise.getScript());
         setIfNotSame(promise::setMeetAt, updatePromiseRequest.getMeetAt(), promise.getMeetAt());

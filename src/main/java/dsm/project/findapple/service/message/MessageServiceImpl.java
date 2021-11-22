@@ -12,7 +12,7 @@ import dsm.project.findapple.entity.promise.Promise;
 import dsm.project.findapple.entity.promise.PromiseRepository;
 import dsm.project.findapple.entity.user.User;
 import dsm.project.findapple.entity.user.UserRepository;
-import dsm.project.findapple.error.exceptions.UserNotFoundException;
+import dsm.project.findapple.error.exceptions.*;
 import dsm.project.findapple.payload.enums.MessageType;
 import dsm.project.findapple.payload.response.MessageResponse;
 import dsm.project.findapple.payload.response.SendImageResponse;
@@ -56,10 +56,10 @@ public class MessageServiceImpl implements MessageService {
                 .orElseThrow(UserNotFoundException::new);
 
         Chat chat = chatRepository.findByChatId(chatId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(ChatNotFoundException::new);
 
         chatUserRepository.findByChatAndUser(chat, user)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(ChatUserNotFoundException::new);
 
         Page<Message> messages = messageRepository.findAllByChatOrderBySendAtDesc(chat, PageRequest.of(pageNum, PAGE_SIZE));
         List<MessageResponse> messageResponses = new ArrayList<>();
@@ -69,12 +69,12 @@ public class MessageServiceImpl implements MessageService {
             Promise promise = null;
             if(message.getMessageType().equals(MessageType.IMAGE)) {
                 messageImage = messageImageRepository.findByMessage(message)
-                        .orElseThrow(RuntimeException::new);
+                        .orElseThrow(MessageImageNotFoundException::new);
             }
 
             if(message.getMessageType().equals(MessageType.PROMISE)) {
                 promise = promiseRepository.findByMessage(message)
-                        .orElseThrow(RuntimeException::new);
+                        .orElseThrow(PromiseNotFoundException::new);
             }
 
             messageResponses.add(
@@ -103,10 +103,10 @@ public class MessageServiceImpl implements MessageService {
                 .orElseThrow(UserNotFoundException::new);
 
         Chat chat = chatRepository.findByChatId(chatId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(ChatNotFoundException::new);
 
         chatUserRepository.findByChatAndUser(chat, user)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(ChatUserNotFoundException::new);
 
         Message message = messageRepository.save(
                 Message.builder()
@@ -137,14 +137,14 @@ public class MessageServiceImpl implements MessageService {
                 .orElseThrow(UserNotFoundException::new);
 
         Message message = messageRepository.findByMessageId(messageId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(MessageNotFoundException::new);
 
         if(!message.getUser().equals(user))
-            throw new RuntimeException();
+            throw new NotYourException();
 
         if(message.getMessageType().equals(MessageType.IMAGE)) {
             MessageImage messageImage = messageImageRepository.findByMessage(message)
-                    .orElseThrow(RuntimeException::new);
+                    .orElseThrow(MessageImageNotFoundException::new);
 
             imageService.delete(messageImage.getImageName());
 
@@ -167,6 +167,6 @@ public class MessageServiceImpl implements MessageService {
                     message.updateMessage("삭제된 메세지 입니다.")
             );
         }else
-            throw new RuntimeException();
+            throw new DoNotHaveAuthorityException();
     }
 }

@@ -1,5 +1,7 @@
 package dsm.project.findapple.utils;
 
+import dsm.project.findapple.error.exceptions.ExBadRequestException;
+import dsm.project.findapple.error.exceptions.ImageNameBadRequestException;
 import dsm.project.findapple.service.image.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -18,14 +20,14 @@ public class ValidateImage {
         String origin = image.getOriginalFilename();
 
         if(origin == null || origin.isEmpty())
-            throw new RuntimeException("Image name bad request");
+            throw new ImageNameBadRequestException();
 
         String ex = StringUtils.getFilenameExtension(origin);
         if(ex == null || ex.isEmpty())
-            throw new RuntimeException("Ex bad request");
+            throw new ExBadRequestException();
 
         if(!(ex.contains("jpg") || ex.contains("jpeg") || ex.contains("png"))) {
-            throw new RuntimeException("ex bad request");
+            throw new ExBadRequestException();
         }
 
         String fileName = UUID.randomUUID() + "." + ex;

@@ -12,6 +12,8 @@ import dsm.project.findapple.entity.images.find.RelationFindRepository;
 import dsm.project.findapple.entity.images.lost.LostImageRepository;
 import dsm.project.findapple.entity.user.User;
 import dsm.project.findapple.entity.user.UserRepository;
+import dsm.project.findapple.error.exceptions.FindNotFoundException;
+import dsm.project.findapple.error.exceptions.NotYourException;
 import dsm.project.findapple.error.exceptions.UserNotFoundException;
 import dsm.project.findapple.payload.enums.Category;
 import dsm.project.findapple.payload.request.AreaRequest;
@@ -103,7 +105,7 @@ public class FindServiceImpl implements FindService {
     @Override
     public void writeFind(String token, WriteFindRequest writeFindRequest) {
         User user = userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         Area area = areaRepository.save(
                 Area.builder()
@@ -144,10 +146,10 @@ public class FindServiceImpl implements FindService {
                 .orElseThrow(UserNotFoundException::new);
 
         Find find = findRepository.findByFindId(findId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(FindNotFoundException::new);
 
         if(find.getUser().equals(user))
-            throw new RuntimeException();
+            throw new NotYourException();
 
         setIfNotNull(find::setTitle, updateFindRequest.getTitle());
         setIfNotNull(find::setDetailInfo, updateFindRequest.getDetail());
@@ -165,7 +167,7 @@ public class FindServiceImpl implements FindService {
                 .orElseThrow(UserNotFoundException::new);
 
         Find find = findRepository.findByFindId(findId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(FindNotFoundException::new);
 
         find.getFindImages().forEach(findImage -> {
             imageService.delete(findImage.getImageName());
@@ -308,7 +310,7 @@ public class FindServiceImpl implements FindService {
                 .orElseThrow(UserNotFoundException::new);
 
         findRepository.findByFindId(findId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(FindNotFoundException::new);
 
         findRepository.deleteByFindId(findId);
     }

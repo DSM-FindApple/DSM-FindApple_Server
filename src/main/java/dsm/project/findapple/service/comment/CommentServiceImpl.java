@@ -11,7 +11,7 @@ import dsm.project.findapple.entity.recomment.Recomment;
 import dsm.project.findapple.entity.recomment.repository.RecommentRepository;
 import dsm.project.findapple.entity.user.User;
 import dsm.project.findapple.entity.user.UserRepository;
-import dsm.project.findapple.error.exceptions.UserNotFoundException;
+import dsm.project.findapple.error.exceptions.*;
 import dsm.project.findapple.payload.enums.CommentType;
 import dsm.project.findapple.payload.request.UpdateCommentRequest;
 import dsm.project.findapple.payload.request.WriteCommentRequest;
@@ -57,12 +57,12 @@ public class CommentServiceImpl implements CommentService {
 
         if(commentType.equals(CommentType.FIND)) {
             Find find = findRepository.findByFindId(id)
-                    .orElseThrow(RuntimeException::new);
+                    .orElseThrow(FindNotFoundException::new);
 
             comments = commentRepository.findAllByFind(find);
         }else {
             Lost lost = lostRepository.findAllByLostId(id)
-                    .orElseThrow(RuntimeException::new);
+                    .orElseThrow(LostNotFoundException::new);
 
             comments = commentRepository.findAllByLost(lost);
         }
@@ -113,10 +113,10 @@ public class CommentServiceImpl implements CommentService {
 
         if(commentType.equals(CommentType.FIND)) {
             find = findRepository.findByFindId(id)
-                    .orElseThrow(RuntimeException::new);
+                    .orElseThrow(FindNotFoundException::new);
         }else {
             lost = lostRepository.findAllByLostId(id)
-                    .orElseThrow(RuntimeException::new);
+                    .orElseThrow(LostNotFoundException::new);
         }
 
         commentRepository.save(
@@ -150,7 +150,7 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(UserNotFoundException::new);
 
         Comment comment = commentRepository.findByCommentId(commentId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(CommentNotFoundException::new);
 
         recommentRepository.save(
                 Recomment.builder()
@@ -191,10 +191,10 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(UserNotFoundException::new);
 
         Comment comment = commentRepository.findByCommentId(commentId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(CommentNotFoundException::new);
 
         if(!comment.getUser().equals(user))
-            throw new RuntimeException();
+            throw new NotYourException();
 
         setIfNotNull(comment::setComment, updateCommentRequest.getComment());
 
@@ -208,10 +208,10 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(UserNotFoundException::new);
 
         Recomment recomment = recommentRepository.findByRecommentId(recommentId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(RecommentNotFoundException::new);
 
         if(!recomment.getUser().equals(user))
-            throw new RuntimeException();
+            throw new NotYourException();
 
         setIfNotNull(recomment::setComment, updateCommentRequest.getComment());
 
@@ -225,10 +225,10 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(UserNotFoundException::new);
 
         Comment comment = commentRepository.findByCommentId(commentId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(CommentNotFoundException::new);
 
         if(!comment.getUser().equals(user))
-            throw new RuntimeException();
+            throw new NotYourException();
 
         recommentRepository.deleteAllByCommentId(comment);
         commentRepository.deleteByCommentId(commentId);
@@ -238,13 +238,13 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public void deleteReComment(String token, Long reCommentId) {
         User user = userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         Recomment recomment = recommentRepository.findByRecommentId(reCommentId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(RecommentNotFoundException::new);
 
         if(!recomment.getUser().equals(user))
-            throw new RuntimeException("not have authority");
+            throw new NotYourException();
 
         recommentRepository.deleteByRecommentId(reCommentId);
     }

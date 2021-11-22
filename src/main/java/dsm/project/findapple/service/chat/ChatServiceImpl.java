@@ -11,6 +11,9 @@ import dsm.project.findapple.entity.message.Message;
 import dsm.project.findapple.entity.message.MessageRepository;
 import dsm.project.findapple.entity.user.User;
 import dsm.project.findapple.entity.user.UserRepository;
+import dsm.project.findapple.error.exceptions.AlreadyBanUserException;
+import dsm.project.findapple.error.exceptions.BanUserNotFoundException;
+import dsm.project.findapple.error.exceptions.ChatUserNotFoundException;
 import dsm.project.findapple.error.exceptions.UserNotFoundException;
 import dsm.project.findapple.payload.response.BanUserResponse;
 import dsm.project.findapple.payload.response.ChatRoomResponse;
@@ -58,7 +61,7 @@ public class ChatServiceImpl implements ChatService {
                 .orElse(null);
 
         if(banUser1 != null)
-            throw new RuntimeException();
+            throw new AlreadyBanUserException();
 
         banUserRepository.save(
                 BanUser.builder()
@@ -105,7 +108,7 @@ public class ChatServiceImpl implements ChatService {
                 .orElseThrow(UserNotFoundException::new);
 
         banUserRepository.findByUserAndBanUser(user, targetUser)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(BanUserNotFoundException::new);
 
         banUserRepository.deleteByBanUserAndUser(targetUser, user);
     }
@@ -157,7 +160,7 @@ public class ChatServiceImpl implements ChatService {
             Chat chat = chatUser.getChat();
 
             ChatUser targetUser = chatUserRepository.findByChatAndUserNot(chat, user)
-                    .orElseThrow(RuntimeException::new);
+                    .orElseThrow(ChatUserNotFoundException::new);
 
             Message message = messageRepository.findTopByChatOrderBySendAtDesc(chat);
 
