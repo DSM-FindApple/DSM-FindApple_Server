@@ -3,11 +3,13 @@ package dsm.project.findapple.utils;
 import dsm.project.findapple.error.exceptions.InvalidTokenException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+@Slf4j
 @Component
 public class JwtProvider {
 
@@ -55,6 +57,8 @@ public class JwtProvider {
     }
 
     public boolean isRefreshToken(String token) {
+        log.info(Boolean.toString(validateToken(token)));
+
         if(validateToken(token))
             throw new InvalidTokenException();
 
