@@ -2,7 +2,6 @@ package dsm.project.findapple.service.message;
 
 import dsm.project.findapple.entity.chat.Chat;
 import dsm.project.findapple.entity.chat.ChatRepository;
-import dsm.project.findapple.entity.chat_user.ChatUser;
 import dsm.project.findapple.entity.chat_user.ChatUserRepository;
 import dsm.project.findapple.entity.images.message.MessageImage;
 import dsm.project.findapple.entity.images.message.MessageImageRepository;
@@ -89,6 +88,7 @@ public class MessageServiceImpl implements MessageService {
                             .promiseId(promise == null ? -1 : promise.getPromiseId())
                             .sendDate(message.getSendAt().toLocalDate().toString())
                             .sendTime(message.getSendAt().toLocalTime().toString())
+                            .message(message.getMessage())
                             .userName(user1 != null ? user.getKakaoNickName() : "")
                             .build()
             );

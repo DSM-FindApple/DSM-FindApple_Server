@@ -11,6 +11,7 @@ public class MessageResponse {
     private Long promiseId;
     private String chatId;
     private String userName;
+    private String message;
     private String profileUrl;
     private String sendDate;
     private String sendTime;
