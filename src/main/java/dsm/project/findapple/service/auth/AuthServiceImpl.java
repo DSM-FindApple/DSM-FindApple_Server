@@ -34,7 +34,7 @@ public class AuthServiceImpl implements AuthService {
         return userRepository.findByKakaoId(kakaoId)
                 .map(user -> {
                     String accessToken = jwtProvider.generateAccessToken(user.getKakaoId());
-                    String refreshToken = jwtProvider.generateRefreshToken(accessToken);
+                    String refreshToken = jwtProvider.generateRefreshToken(user.getKakaoId());
 
                     refreshTokenRepository.save(
                             RefreshToken.builder()
@@ -111,12 +111,14 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public TokenResponse refreshToken(String accessToken, String refreshToken) {
+    public TokenResponse refreshToken(String refreshToken) {
+        if(!jwtProvider.isRefreshToken(refreshToken))
+            throw new InvalidTokenException();
+
         return refreshTokenRepository.findByRefreshToken(refreshToken)
-                .filter(refreshToken1 -> jwtProvider.getAccessToken(refreshToken1.getRefreshToken()).equals(accessToken))
                 .map(refreshToken1 -> {
                     String newAccessToken = jwtProvider.generateAccessToken(refreshToken1.getKakaoId());
-                    String newRefreshToken = jwtProvider.generateRefreshToken(newAccessToken);
+                    String newRefreshToken = jwtProvider.generateRefreshToken(refreshToken1.getKakaoId());
 
                     refreshTokenRepository.save(
                             refreshToken1.updateRefreshToken(newRefreshToken)
