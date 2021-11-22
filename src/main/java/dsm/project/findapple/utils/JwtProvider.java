@@ -26,17 +26,18 @@ public class JwtProvider {
         return Jwts.builder()
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiredAccess * 1000))
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .signWith(SignatureAlgorithm.HS256, secret)
                 .claim("type", "access_token")
                 .setSubject(kakaoId.toString())
                 .compact();
     }
 
     public String generateRefreshToken(Long kakaoId) {
+        log.info(expiredRefresh.toString());
         return Jwts.builder()
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiredRefresh * 1000))
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .signWith(SignatureAlgorithm.HS256, secret)
                 .claim("type", "refresh_token")
                 .setSubject(kakaoId.toString())
                 .compact();
@@ -54,8 +55,6 @@ public class JwtProvider {
     }
 
     public boolean isRefreshToken(String token) {
-        log.info(Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("type").toString());
-
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token)
                 .getBody().get("type").equals("refresh_token");
     }
