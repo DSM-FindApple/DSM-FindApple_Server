@@ -26,4 +26,6 @@ public class ChatUser {
     @ManyToOne
     @JoinColumn(name = "chat_id")
     private Chat chat;
+
+    private Boolean isEntered;
 }

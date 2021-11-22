@@ -133,6 +133,7 @@ public class ChatServiceImpl implements ChatService {
                 ChatUser.builder()
                         .chat(chat)
                         .user(user)
+                        .isEntered(false)
                         .build()
         );
 
@@ -140,6 +141,7 @@ public class ChatServiceImpl implements ChatService {
                 ChatUser.builder()
                         .user(targetUser)
                         .chat(chat)
+                        .isEntered(false)
                         .build()
         );
 
