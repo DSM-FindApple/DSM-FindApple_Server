@@ -13,5 +13,6 @@ public class ReCommentResponse {
     private Long userId;
     private String nickName;
     private String comment;
+    private String profileUrl;
     private LocalDateTime writeAt;
 }

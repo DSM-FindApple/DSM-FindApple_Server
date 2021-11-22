@@ -15,5 +15,6 @@ public class CommentResponse {
     private String nickName;
     private String comment;
     private LocalDateTime writeAt;
+    private String profileUrl;
     private List<ReCommentResponse> reComment;
 }

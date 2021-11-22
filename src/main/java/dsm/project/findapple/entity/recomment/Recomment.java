@@ -2,15 +2,13 @@ package dsm.project.findapple.entity.recomment;
 
 import dsm.project.findapple.entity.comment.Comment;
 import dsm.project.findapple.entity.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @Builder
 @Entity
 @NoArgsConstructor
