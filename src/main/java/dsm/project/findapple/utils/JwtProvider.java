@@ -36,7 +36,7 @@ public class JwtProvider {
     public String generateRefreshToken(String accessToken) {
         return Jwts.builder()
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiredAccess * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + expiredRefresh * 1000))
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .claim("type", "refresh_token")
                 .setSubject(accessToken)
