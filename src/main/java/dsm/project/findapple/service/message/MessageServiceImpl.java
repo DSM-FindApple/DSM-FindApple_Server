@@ -77,17 +77,19 @@ public class MessageServiceImpl implements MessageService {
                         .orElseThrow(PromiseNotFoundException::new);
             }
 
+            User user1 = message.getUser();
+
             messageResponses.add(
                     MessageResponse.builder()
                             .chatId(message.getChat().getChatId())
                             .messageId(message.getMessageId())
                             .messageImageName(messageImage == null ? "" : messageImage.getImageName())
                             .messageType(message.getMessageType())
-                            .profileUrl(message.getUser().getProfileUrl())
+                            .profileUrl(user1 != null ? user.getProfileUrl() : "")
                             .promiseId(promise == null ? -1 : promise.getPromiseId())
                             .sendDate(message.getSendAt().toLocalDate().toString())
                             .sendTime(message.getSendAt().toLocalTime().toString())
-                            .userName(message.getUser().getKakaoNickName())
+                            .userName(user1 != null ? user.getKakaoNickName() : "")
                             .build()
             );
         }

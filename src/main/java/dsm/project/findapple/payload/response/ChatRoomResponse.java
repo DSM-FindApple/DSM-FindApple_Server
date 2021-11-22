@@ -10,5 +10,6 @@ public class ChatRoomResponse {
     private String title;
     private String topMessage;
     private String targetProfileUrl;
+    private Long targetId;
     private Boolean isBan;
 }

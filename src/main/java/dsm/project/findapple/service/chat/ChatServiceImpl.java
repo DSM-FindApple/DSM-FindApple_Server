@@ -171,6 +171,7 @@ public class ChatServiceImpl implements ChatService {
                             .targetProfileUrl(targetUser.getUser().getProfileUrl())
                             .title(targetUser.getUser().getKakaoNickName())
                             .topMessage(message == null ? "" : message.getMessage())
+                            .targetId(targetUser.getUser().getKakaoId())
                             .build()
             );
         }
