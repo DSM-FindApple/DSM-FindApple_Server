@@ -4,16 +4,14 @@ import dsm.project.findapple.entity.find.Find;
 import dsm.project.findapple.entity.lost.Lost;
 import dsm.project.findapple.entity.recomment.Recomment;
 import dsm.project.findapple.entity.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
+@Setter
 @Builder
 @Entity
 @NoArgsConstructor
