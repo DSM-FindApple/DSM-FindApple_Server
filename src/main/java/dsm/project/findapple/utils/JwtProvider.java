@@ -19,9 +19,6 @@ public class JwtProvider {
     @Value("${jwt.refresh}")
     private Integer expiredRefresh;
 
-    @Value("${jwt.prefix}")
-    private String prefix;
-
     @Value("${jwt.secret}")
     private String secret;
 
@@ -50,24 +47,21 @@ public class JwtProvider {
             Jwts.parser().setSigningKey(secret)
                     .parseClaimsJws(token).getBody().getSubject();
 
-            return false;
-        }catch (Exception e) {
             return true;
+        }catch (Exception e) {
+            return false;
         }
     }
 
     public boolean isRefreshToken(String token) {
-        log.info(Boolean.toString(validateToken(token)));
-
-        if(validateToken(token))
-            throw new InvalidTokenException();
+        log.info(Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("type").toString());
 
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token)
                 .getBody().get("type").equals("refresh_token");
     }
 
     public Long getKakaoId(String token) {
-        if(validateToken(token))
+        if(!validateToken(token))
             throw new InvalidTokenException();
 
         return Long.parseLong(Jwts.parser().setSigningKey(secret)

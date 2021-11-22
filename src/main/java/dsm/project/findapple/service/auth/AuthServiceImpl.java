@@ -112,8 +112,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenResponse refreshToken(String refreshToken) {
-        log.info(Boolean.toString(jwtProvider.isRefreshToken(refreshToken)));
-        if(!jwtProvider.isRefreshToken(refreshToken))
+        if(!jwtProvider.isRefreshToken(refreshToken) || !jwtProvider.validateToken(refreshToken))
             throw new InvalidTokenException();
 
         return refreshTokenRepository.findByRefreshToken(refreshToken)
