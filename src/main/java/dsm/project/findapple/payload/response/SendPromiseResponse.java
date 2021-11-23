@@ -6,5 +6,5 @@ import lombok.Getter;
 @Getter
 @Builder
 public class SendPromiseResponse {
-    private Long messageId;
+    private Long promiseId;
 }

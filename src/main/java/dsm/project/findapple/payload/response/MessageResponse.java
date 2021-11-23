@@ -10,7 +10,7 @@ public class MessageResponse {
     private Long messageId;
     private Long promiseId;
     private String chatId;
-    private String userName;
+    private String sendUserName;
     private String message;
     private String profileUrl;
     private String sendDate;

@@ -84,12 +84,12 @@ public class MessageServiceImpl implements MessageService {
                             .messageId(message.getMessageId())
                             .messageImageName(messageImage == null ? "" : messageImage.getImageName())
                             .messageType(message.getMessageType())
-                            .profileUrl(user1 != null ? user.getProfileUrl() : "")
+                            .profileUrl(user1 != null ? user1.getProfileUrl() : "")
                             .promiseId(promise == null ? -1 : promise.getPromiseId())
                             .sendDate(message.getSendAt().toLocalDate().toString())
                             .sendTime(message.getSendAt().toLocalTime().toString())
                             .message(message.getMessage())
-                            .userName(user1 != null ? user.getKakaoNickName() : "")
+                            .sendUserName(user1 != null ? user1.getKakaoNickName() : "")
                             .build()
             );
         }
