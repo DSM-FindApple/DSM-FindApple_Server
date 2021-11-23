@@ -89,6 +89,7 @@ public class MessageServiceImpl implements MessageService {
                             .sendDate(message.getSendAt().toLocalDate().toString())
                             .sendTime(message.getSendAt().toLocalTime().toString())
                             .message(message.getMessage())
+                            .kakaoId(user1 != null ? user1.getKakaoId() : -1)
                             .sendUserName(user1 != null ? user1.getKakaoNickName() : "")
                             .build()
             );

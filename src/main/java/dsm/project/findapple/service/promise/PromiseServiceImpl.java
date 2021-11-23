@@ -89,7 +89,7 @@ public class PromiseServiceImpl implements PromiseService {
         );
 
         return SendPromiseResponse.builder()
-                .messageId(promise.getPromiseId())
+                .promiseId(promise.getPromiseId())
                 .build();
     }
 

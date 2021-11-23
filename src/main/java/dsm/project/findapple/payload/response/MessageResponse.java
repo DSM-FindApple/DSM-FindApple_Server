@@ -10,6 +10,7 @@ public class MessageResponse {
     private Long messageId;
     private Long promiseId;
     private String chatId;
+    private Long kakaoId;
     private String sendUserName;
     private String message;
     private String profileUrl;
