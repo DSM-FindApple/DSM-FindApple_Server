@@ -1,6 +1,5 @@
 package dsm.project.findapple.payload.response;
 
-import dsm.project.findapple.payload.enums.MessageType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,6 +8,7 @@ import lombok.Getter;
 public class PromiseResponse {
     private Long promiseId;
     private String chatId;
+    private Long kakaoId;
     private String script;
     private String meetAt;
     private Double longitude;

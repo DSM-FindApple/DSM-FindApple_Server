@@ -69,7 +69,11 @@ public class FindServiceImpl implements FindService {
             for (FindImage findImage : find.getFindImages())
                 findImages.add(findImage.getImageName());
 
-            Comment topComment = find.getComments().get(find.getComments().size() - 1);
+            Comment topComment = null;
+
+            if(!find.getComments().isEmpty()) {
+                topComment = find.getComments().get(find.getComments().size() - 1);
+            }
 
             responses.add(
                     FindResponse.builder()
@@ -85,14 +89,15 @@ public class FindServiceImpl implements FindService {
                             .profileUrl(find.getUser().getProfileUrl())
                             .title(find.getTitle())
                             .topComment(
-                                    TopCommentResponse.builder()
-                                            .comment(topComment.getComment())
-                                            .postId(find.getFindId())
-                                            .nickName(topComment.getUser().getKakaoNickName())
-                                            .userId(topComment.getUser().getKakaoId())
-                                            .commentId(topComment.getCommentId())
-                                            .writeAt(topComment.getWriteAt())
-                                            .build()
+                                    topComment == null ? null :
+                                            TopCommentResponse.builder()
+                                                    .comment(topComment.getComment())
+                                                    .postId(find.getFindId())
+                                                    .nickName(topComment.getUser().getKakaoNickName())
+                                                    .userId(topComment.getUser().getKakaoId())
+                                                    .commentId(topComment.getCommentId())
+                                                    .writeAt(topComment.getWriteAt())
+                                                    .build()
                             )
                             .writeAt(find.getWriteAt().toLocalDate())
                             .build()

@@ -26,6 +26,7 @@ import dsm.project.findapple.utils.JwtProvider;
 import dsm.project.findapple.utils.KoreanDecoder;
 import dsm.project.findapple.utils.ValidateImage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class LostServiceImpl implements LostService {
 
@@ -72,7 +74,11 @@ public class LostServiceImpl implements LostService {
                 imageName.add(lostImage.getLostImageName());
             });
 
-            Comment topComment = lost.getComments().get(lost.getComments().size() - 1);
+            Comment topComment = null;
+
+            if(!lost.getComments().isEmpty()) {
+               topComment = lost.getComments().get(lost.getComments().size() - 1);
+            }
 
             lostResponses.add(
                     LostResponse.builder()
@@ -87,7 +93,9 @@ public class LostServiceImpl implements LostService {
                             .lostUser(lost.getUser().getKakaoNickName())
                             .title(lost.getTitle())
                             .writeAt(lost.getWriteAt().toLocalDate())
+                            .profileUrl(lost.getUser().getProfileUrl())
                             .topComment(
+                                    topComment == null ? null :
                                     TopCommentResponse.builder()
                                             .postId(lost.getLostId())
                                             .commentId(topComment.getCommentId())
@@ -100,6 +108,7 @@ public class LostServiceImpl implements LostService {
                             .build()
             );
         });
+
 
         return lostResponses;
     }

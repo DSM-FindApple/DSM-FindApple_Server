@@ -113,6 +113,7 @@ public class PromiseServiceImpl implements PromiseService {
                             .targetProfileUrl(promise.getTarget().getProfileUrl())
                             .meetAt(promise.getMeetAt().toString())
                             .script(promise.getScript())
+                            .kakaoId(promise.getUser().getKakaoId())
                             .build()
             );
         }
@@ -129,16 +130,17 @@ public class PromiseServiceImpl implements PromiseService {
                 .orElseThrow(PromiseNotFoundException::new);
 
         return PromiseResponse.builder()
-                        .chatId(promise.getMessage().getChat().getChatId())
-                        .promiseId(promise.getPromiseId())
-                        .isAccept(promise.getIsAccept())
-                        .latitude(promise.getArea().getLatitude())
-                        .longitude(promise.getArea().getLongitude())
-                        .targetName(promise.getTarget().getKakaoNickName())
-                        .targetProfileUrl(promise.getTarget().getProfileUrl())
-                        .meetAt(promise.getMeetAt().toString())
-                        .script(promise.getScript())
-                        .build();
+                .chatId(promise.getMessage().getChat().getChatId())
+                .promiseId(promise.getPromiseId())
+                .isAccept(promise.getIsAccept())
+                .latitude(promise.getArea().getLatitude())
+                .longitude(promise.getArea().getLongitude())
+                .targetName(promise.getTarget().getKakaoNickName())
+                .targetProfileUrl(promise.getTarget().getProfileUrl())
+                .meetAt(promise.getMeetAt().toString())
+                .script(promise.getScript())
+                .kakaoId(promise.getUser().getKakaoId())
+                .build();
     }
 
     @Override

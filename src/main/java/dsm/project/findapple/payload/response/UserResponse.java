@@ -15,4 +15,5 @@ public class UserResponse {
     private Integer findNum;
     private Integer findapplePoint;
     private List<LostResponse> myLosts;
+    private List<FindResponse> myFinds;
 }

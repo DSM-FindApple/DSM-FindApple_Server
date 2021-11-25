@@ -8,6 +8,7 @@ import dsm.project.findapple.payload.response.FindResponse;
 import dsm.project.findapple.payload.response.LostResponse;
 import dsm.project.findapple.service.lost.LostService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin("*")
+@Slf4j
 @RequestMapping("/lost")
 @RequiredArgsConstructor
 public class LostController {
@@ -49,7 +51,7 @@ public class LostController {
                                       @RequestHeader("Authorization") String token) {
         return lostService.readLost(token, pageNum,
                 AreaRequest.builder()
-                        .startLatitude(startLongitude)
+                        .startLongitude(startLongitude)
                         .startLatitude(startLatitude)
                         .endLongitude(endLongitude)
                         .endLatitude(endLatitude)

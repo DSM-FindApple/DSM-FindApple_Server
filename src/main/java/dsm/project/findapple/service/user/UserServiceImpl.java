@@ -4,11 +4,13 @@ import dsm.project.findapple.entity.area.AreaRepository;
 import dsm.project.findapple.entity.comment.Comment;
 import dsm.project.findapple.entity.find.Find;
 import dsm.project.findapple.entity.find.FindRepository;
+import dsm.project.findapple.entity.images.find.FindImage;
 import dsm.project.findapple.entity.lost.Lost;
 import dsm.project.findapple.entity.lost.LostRepository;
 import dsm.project.findapple.entity.user.User;
 import dsm.project.findapple.entity.user.UserRepository;
 import dsm.project.findapple.error.exceptions.UserNotFoundException;
+import dsm.project.findapple.payload.response.FindResponse;
 import dsm.project.findapple.payload.response.LostResponse;
 import dsm.project.findapple.payload.response.TopCommentResponse;
 import dsm.project.findapple.payload.response.UserResponse;
@@ -41,7 +43,11 @@ public class UserServiceImpl implements UserService {
                 imageName.add(lostImage.getLostImageName());
             });
 
-            Comment topComment = lost.getComments().get(lost.getComments().size() - 1);
+            Comment topComment = null;
+
+            if(!lost.getComments().isEmpty()) {
+                topComment = lost.getComments().get(lost.getComments().size() - 1);
+            }
 
             lostResponses.add(
                     LostResponse.builder()
@@ -57,6 +63,7 @@ public class UserServiceImpl implements UserService {
                             .title(lost.getTitle())
                             .writeAt(lost.getWriteAt().toLocalDate())
                             .topComment(
+                                    topComment == null ? null :
                                     TopCommentResponse.builder()
                                             .postId(lost.getLostId())
                                             .commentId(topComment.getCommentId())
@@ -73,6 +80,52 @@ public class UserServiceImpl implements UserService {
         return lostResponses;
     }
 
+    private List<FindResponse> setFindResponse(List<Find> findPage) {
+        List<FindResponse> responses = new ArrayList<>();
+
+        for (Find find : findPage) {
+            List<String> findImages = new ArrayList<>();
+            for (FindImage findImage : find.getFindImages())
+                findImages.add(findImage.getImageName());
+
+            Comment topComment = null;
+
+            if(!find.getComments().isEmpty()) {
+                topComment = find.getComments().get(find.getComments().size() - 1);
+            }
+
+            responses.add(
+                    FindResponse.builder()
+                            .findAt(find.getFindAt())
+                            .findImages(findImages)
+                            .findId(find.getFindId())
+                            .category(find.getCategory())
+                            .detail(find.getDetailInfo())
+                            .findUser(find.getUser().getKakaoNickName())
+                            .kakaoId(find.getUser().getKakaoId())
+                            .latitude(find.getArea().getLatitude())
+                            .longitude(find.getArea().getLongitude())
+                            .profileUrl(find.getUser().getProfileUrl())
+                            .title(find.getTitle())
+                            .topComment(
+                                    topComment == null ? null :
+                                    TopCommentResponse.builder()
+                                            .comment(topComment.getComment())
+                                            .postId(find.getFindId())
+                                            .nickName(topComment.getUser().getKakaoNickName())
+                                            .userId(topComment.getUser().getKakaoId())
+                                            .commentId(topComment.getCommentId())
+                                            .writeAt(topComment.getWriteAt())
+                                            .build()
+                            )
+                            .writeAt(find.getWriteAt().toLocalDate())
+                            .build()
+            );
+        }
+
+        return responses;
+    }
+
     @Override
     public UserResponse getMyInfo(String token) {
         User user = userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
@@ -82,6 +135,7 @@ public class UserServiceImpl implements UserService {
         int findNum = findRepository.countAllByUser(user);
 
         List<Lost> myLosts = lostRepository.findAllByUser(user);
+        List<Find> myFinds = findRepository.findAllByUser(user);
 
         return UserResponse.builder()
                 .kakaoId(user.getKakaoId())
@@ -91,6 +145,7 @@ public class UserServiceImpl implements UserService {
                 .myLosts(setLostResponses(myLosts))
                 .profileUrl(user.getProfileUrl())
                 .nickName(user.getKakaoNickName())
+                .myFinds(setFindResponse(myFinds))
                 .build();
     }
 }
