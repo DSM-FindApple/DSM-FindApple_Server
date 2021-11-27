@@ -11,6 +11,7 @@ public class TopCommentResponse {
     private Long commentId;
     private Long postId;
     private Long userId;
+    private String profileUrl;
     private String nickName;
     private String comment;
     private LocalDateTime writeAt;

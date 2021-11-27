@@ -99,6 +99,7 @@ public class LostServiceImpl implements LostService {
                                     TopCommentResponse.builder()
                                             .postId(lost.getLostId())
                                             .commentId(topComment.getCommentId())
+                                            .profileUrl(topComment.getUser().getProfileUrl())
                                             .comment(topComment.getComment())
                                             .nickName(topComment.getUser().getKakaoNickName())
                                             .userId(topComment.getUser().getKakaoId())
@@ -294,6 +295,7 @@ public class LostServiceImpl implements LostService {
                 lostResponse.setTopComment(
                         TopCommentResponse.builder()
                                 .commentId(comment.getCommentId())
+                                .profileUrl(comment.getUser().getProfileUrl())
                                 .writeAt(comment.getWriteAt())
                                 .userId(comment.getUser().getKakaoId())
                                 .nickName(comment.getUser().getKakaoNickName())

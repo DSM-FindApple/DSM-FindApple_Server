@@ -93,6 +93,7 @@ public class FindServiceImpl implements FindService {
                                             TopCommentResponse.builder()
                                                     .comment(topComment.getComment())
                                                     .postId(find.getFindId())
+                                                    .profileUrl(topComment.getUser().getProfileUrl())
                                                     .nickName(topComment.getUser().getKakaoNickName())
                                                     .userId(topComment.getUser().getKakaoId())
                                                     .commentId(topComment.getCommentId())
@@ -284,6 +285,7 @@ public class FindServiceImpl implements FindService {
                 response.setTopComment(
                         TopCommentResponse.builder()
                                 .commentId(comment.getCommentId())
+                                .profileUrl(comment.getUser().getProfileUrl())
                                 .writeAt(comment.getWriteAt())
                                 .userId(comment.getUser().getKakaoId())
                                 .nickName(comment.getUser().getKakaoNickName())
