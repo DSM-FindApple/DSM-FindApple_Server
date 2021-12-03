@@ -1,4 +1,4 @@
-package dsm.project.findapple.entity.images.find;
+package dsm.project.findapple.entity.find;
 
 import dsm.project.findapple.payload.response.LostResponse;
 import dsm.project.findapple.utils.MyQueries;

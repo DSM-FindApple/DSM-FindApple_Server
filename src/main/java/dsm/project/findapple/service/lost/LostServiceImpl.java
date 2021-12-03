@@ -5,7 +5,6 @@ import dsm.project.findapple.entity.area.AreaRepository;
 import dsm.project.findapple.entity.comment.Comment;
 import dsm.project.findapple.entity.comment.repository.CommentRepository;
 import dsm.project.findapple.entity.images.find.FindImageRepository;
-import dsm.project.findapple.entity.images.find.RelationFindRepository;
 import dsm.project.findapple.entity.images.lost.LostImage;
 import dsm.project.findapple.entity.images.lost.LostImageRepository;
 import dsm.project.findapple.entity.lost.Lost;

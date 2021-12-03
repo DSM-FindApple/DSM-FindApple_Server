@@ -8,7 +8,7 @@ import dsm.project.findapple.entity.find.Find;
 import dsm.project.findapple.entity.find.FindRepository;
 import dsm.project.findapple.entity.images.find.FindImage;
 import dsm.project.findapple.entity.images.find.FindImageRepository;
-import dsm.project.findapple.entity.images.find.RelationFindRepository;
+import dsm.project.findapple.entity.find.RelationFindRepository;
 import dsm.project.findapple.entity.images.lost.LostImageRepository;
 import dsm.project.findapple.entity.user.User;
 import dsm.project.findapple.entity.user.UserRepository;
