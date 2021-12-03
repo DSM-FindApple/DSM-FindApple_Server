@@ -262,11 +262,15 @@ public class FindServiceImpl implements FindService {
                 .orElseThrow(UserNotFoundException::new);
 
         List<String> keywords = koreanDecoder.decodeKorean(title);
-        StringBuilder addSql = new StringBuilder(" l.title LIKE '%" + keywords.get(0) + "%'");
-        keywords.remove(0);
+        StringBuilder addSql = new StringBuilder();
 
-        for(String keyword : keywords) {
-            addSql.append(" OR l.title LIKE '%").append(keyword).append("%'");
+        if(!keywords.isEmpty()) {
+            addSql = new StringBuilder(" WHERE l.title LIKE '%" + keywords.get(0) + "%'");
+            keywords.remove(0);
+
+            for(String keyword : keywords) {
+                addSql.append(" OR l.title LIKE '%").append(keyword).append("%'");
+            }
         }
 
         List<LostResponse> responses = relationFindRepository.findAllByRelation(

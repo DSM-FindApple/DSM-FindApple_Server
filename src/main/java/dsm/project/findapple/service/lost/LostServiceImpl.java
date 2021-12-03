@@ -5,6 +5,7 @@ import dsm.project.findapple.entity.area.AreaRepository;
 import dsm.project.findapple.entity.comment.Comment;
 import dsm.project.findapple.entity.comment.repository.CommentRepository;
 import dsm.project.findapple.entity.images.find.FindImageRepository;
+import dsm.project.findapple.entity.images.find.RelationFindRepository;
 import dsm.project.findapple.entity.images.lost.LostImage;
 import dsm.project.findapple.entity.images.lost.LostImageRepository;
 import dsm.project.findapple.entity.lost.Lost;
@@ -272,11 +273,15 @@ public class LostServiceImpl implements LostService {
                 .orElseThrow(UserNotFoundException::new);
 
         List<String> keywords = koreanDecoder.decodeKorean(title);
-        StringBuilder addSql = new StringBuilder(" l.title LIKE '%" + keywords.get(0) + "%'");
-        keywords.remove(0);
+        StringBuilder addSql = new StringBuilder();
 
-        for(String keyword : keywords) {
-            addSql.append(" OR l.title LIKE '%").append(keyword).append("%'");
+        if(!keywords.isEmpty()) {
+            addSql = new StringBuilder(" WHERE l.title LIKE '%" + keywords.get(0) + "%'");
+            keywords.remove(0);
+
+            for(String keyword : keywords) {
+                addSql.append(" OR l.title LIKE '%").append(keyword).append("%'");
+            }
         }
 
         List<FindResponse> findResponses = relationLostRepository.findAllByRelation(

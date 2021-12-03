@@ -1,5 +1,6 @@
 package dsm.project.findapple.service.image;
 
+import dsm.project.findapple.error.exceptions.FileNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
@@ -9,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 @Service
 @RequiredArgsConstructor
