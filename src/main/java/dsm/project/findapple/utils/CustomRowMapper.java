@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Date;
 
 
 public class CustomRowMapper {
@@ -30,7 +31,6 @@ public class CustomRowMapper {
             Double longitude = rs.getDouble("longitude");
             Double latitude = rs.getDouble("latitude");
             LocalDate writeAt = rs.getDate("writeAt").toLocalDate();
-            LocalDateTime lostAt = LocalDateTime.ofInstant(rs.getDate("findAt").toInstant(), ZoneId.of("Asia/Seoul"));
             Long kakaoId = rs.getLong("kakaoId");
             String lostUser = rs.getString("lostUser");
 
@@ -41,7 +41,6 @@ public class CustomRowMapper {
                     .title(title)
                     .latitude(latitude)
                     .longitude(longitude)
-                    .findAt(lostAt)
                     .findUser(lostUser)
                     .writeAt(writeAt)
                     .findId(lostId)
@@ -64,7 +63,6 @@ public class CustomRowMapper {
             Double latitude = rs.getDouble("latitude");
             LocalDate writeAt = rs.getDate("writeAt").toLocalDate();
             String profileUrl = rs.getString("profileUrl");
-            LocalDateTime lostAt = LocalDateTime.ofInstant(rs.getDate("lostAt").toInstant(), ZoneId.of("Asia/Seoul"));
             Long kakaoId = rs.getLong("kakaoId");
             String lostUser = rs.getString("lostUser");
 
@@ -72,7 +70,6 @@ public class CustomRowMapper {
                     .lostId(lostId)
                     .writeAt(writeAt)
                     .lostUser(lostUser)
-                    .lostAt(lostAt)
                     .longitude(longitude)
                     .latitude(latitude)
                     .title(title)

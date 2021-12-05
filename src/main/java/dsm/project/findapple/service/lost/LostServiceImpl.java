@@ -4,6 +4,8 @@ import dsm.project.findapple.entity.area.Area;
 import dsm.project.findapple.entity.area.AreaRepository;
 import dsm.project.findapple.entity.comment.Comment;
 import dsm.project.findapple.entity.comment.repository.CommentRepository;
+import dsm.project.findapple.entity.find.Find;
+import dsm.project.findapple.entity.find.FindRepository;
 import dsm.project.findapple.entity.images.find.FindImageRepository;
 import dsm.project.findapple.entity.images.lost.LostImage;
 import dsm.project.findapple.entity.images.lost.LostImageRepository;
@@ -12,6 +14,7 @@ import dsm.project.findapple.entity.lost.LostRepository;
 import dsm.project.findapple.entity.lost.RelationLostRepository;
 import dsm.project.findapple.entity.user.User;
 import dsm.project.findapple.entity.user.UserRepository;
+import dsm.project.findapple.error.exceptions.FindNotFoundException;
 import dsm.project.findapple.error.exceptions.LostNotFoundException;
 import dsm.project.findapple.error.exceptions.UserNotFoundException;
 import dsm.project.findapple.payload.enums.Category;
@@ -37,6 +40,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 @Service
@@ -50,6 +54,7 @@ public class LostServiceImpl implements LostService {
     private final UserRepository userRepository;
     private final AreaRepository areaRepository;
     private final RelationLostRepository relationLostRepository;
+    private final FindRepository findRepository;
     private final CommentRepository commentRepository;
 
     private final JwtProvider jwtProvider;
@@ -288,7 +293,7 @@ public class LostServiceImpl implements LostService {
         }
 
         List<FindResponse> findResponses = relationLostRepository.findAllByRelation(
-                String.valueOf(addSql),
+                addSql,
                 dsm.project.findapple.utils.Page.of(pageNum, PAGE_SIZE)
         );
 
@@ -298,7 +303,11 @@ public class LostServiceImpl implements LostService {
 
             List<String> images = findImageRepository.getImageNames(lostResponse.getFindId());
 
+            Find find = findRepository.findByFindId(lostResponse.getFindId())
+                            .orElseThrow(FindNotFoundException::new);
+
             lostResponse.setFindImages(images);
+            lostResponse.setFindAt(find.getFindAt());
             if(comment != null) {
                 lostResponse.setTopComment(
                         TopCommentResponse.builder()

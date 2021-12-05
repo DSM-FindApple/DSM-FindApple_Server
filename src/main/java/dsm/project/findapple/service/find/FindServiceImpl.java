@@ -10,9 +10,12 @@ import dsm.project.findapple.entity.images.find.FindImage;
 import dsm.project.findapple.entity.images.find.FindImageRepository;
 import dsm.project.findapple.entity.find.RelationFindRepository;
 import dsm.project.findapple.entity.images.lost.LostImageRepository;
+import dsm.project.findapple.entity.lost.Lost;
+import dsm.project.findapple.entity.lost.LostRepository;
 import dsm.project.findapple.entity.user.User;
 import dsm.project.findapple.entity.user.UserRepository;
 import dsm.project.findapple.error.exceptions.FindNotFoundException;
+import dsm.project.findapple.error.exceptions.LostNotFoundException;
 import dsm.project.findapple.error.exceptions.NotYourException;
 import dsm.project.findapple.error.exceptions.UserNotFoundException;
 import dsm.project.findapple.payload.enums.Category;
@@ -49,6 +52,7 @@ public class FindServiceImpl implements FindService {
     private final RelationFindRepository relationFindRepository;
     private final CommentRepository commentRepository;
     private final LostImageRepository lostImageRepository;
+    private final LostRepository lostRepository;
 
     private final JwtProvider jwtProvider;
     private final ValidateImage validateImage;
@@ -279,7 +283,7 @@ public class FindServiceImpl implements FindService {
         }
 
         List<LostResponse> responses = relationFindRepository.findAllByRelation(
-                String.valueOf(addSql),
+                addSql,
                 dsm.project.findapple.utils.Page.of(pageNum, PAGE_SIZE)
         );
 
@@ -289,7 +293,11 @@ public class FindServiceImpl implements FindService {
 
             List<String> imageNames = lostImageRepository.getImageNames(response.getLostId());
 
+            Lost lost = lostRepository.findAllByLostId(response.getLostId())
+                            .orElseThrow(LostNotFoundException::new);
+
             response.setLostImages(imageNames);
+            response.setLostAt(lost.getLostAt());
             if(comment != null) {
                 response.setTopComment(
                         TopCommentResponse.builder()
