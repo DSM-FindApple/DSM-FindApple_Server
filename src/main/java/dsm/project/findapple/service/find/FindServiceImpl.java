@@ -198,6 +198,8 @@ public class FindServiceImpl implements FindService {
         userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
                 .orElseThrow(UserNotFoundException::new);
 
+        System.out.println(areaRequest.getStartLongitude() + " " + areaRequest.getEndLongitude() + " " + areaRequest.getStartLatitude() + " " + areaRequest.getEndLatitude());
+
         Double minusLongitude = areaRequest.getEndLongitude() - areaRequest.getStartLongitude();
         Double minusLatitude = areaRequest.getStartLatitude() - areaRequest.getEndLatitude();
 
@@ -218,6 +220,8 @@ public class FindServiceImpl implements FindService {
     public List<FindResponse> readFind(String token, int pageNum, AreaRequest areaRequest) {
         userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
                 .orElseThrow(UserNotFoundException::new);
+
+        System.out.println(areaRequest.getStartLongitude() + " " + areaRequest.getEndLongitude() + " " + areaRequest.getStartLatitude() + " " + areaRequest.getEndLatitude());
 
         Double minusLongitude = areaRequest.getEndLongitude() - areaRequest.getStartLongitude();
         Double minusLatitude = areaRequest.getStartLatitude() - areaRequest.getEndLatitude();
@@ -263,14 +267,14 @@ public class FindServiceImpl implements FindService {
                 .orElseThrow(UserNotFoundException::new);
 
         List<String> keywords = koreanDecoder.decodeKorean(title);
-        StringBuilder addSql = new StringBuilder();
+        String addSql = "";
 
         if(!keywords.isEmpty()) {
-            addSql = new StringBuilder(" WHERE l.title LIKE '%" + keywords.get(0) + "%'");
+            addSql = " WHERE l.title LIKE '%" + keywords.get(0) + "%'";
             keywords.remove(0);
 
             for(String keyword : keywords) {
-                addSql.append(" OR l.title LIKE '%").append(keyword).append("%'");
+                addSql +=" OR l.title LIKE '%" + keyword + "%'";
             }
         }
 
@@ -322,8 +326,12 @@ public class FindServiceImpl implements FindService {
         userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
                 .orElseThrow(UserNotFoundException::new);
 
-        findRepository.findByFindId(findId)
+        Find find = findRepository.findByFindId(findId)
                 .orElseThrow(FindNotFoundException::new);
+
+        areaRepository.deleteByAreaCode(find.getArea().getAreaCode());
+
+        findImageRepository.deleteAllByFind(find);
 
         findRepository.deleteByFindId(findId);
     }

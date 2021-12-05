@@ -206,6 +206,8 @@ public class LostServiceImpl implements LostService {
         userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
                 .orElseThrow(UserNotFoundException::new);
 
+        System.out.println(areaRequest.getStartLongitude() + " " + areaRequest.getEndLongitude() + " " + areaRequest.getStartLatitude() + " " + areaRequest.getEndLatitude());
+
         Double minusLongitude = areaRequest.getEndLongitude() - areaRequest.getStartLongitude();
         Double minusLatitude = areaRequest.getStartLatitude() - areaRequest.getEndLatitude();
 
@@ -227,6 +229,8 @@ public class LostServiceImpl implements LostService {
     public List<LostResponse> readLost(String token, int pageNum, AreaRequest areaRequest) {
         userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
                 .orElseThrow(UserNotFoundException::new);
+
+        System.out.println(areaRequest.getStartLongitude() + " " + areaRequest.getEndLongitude() + " " + areaRequest.getStartLatitude() + " " + areaRequest.getEndLatitude());
 
         Double minusLongitude = areaRequest.getEndLongitude() - areaRequest.getStartLongitude();
         Double minusLatitude = areaRequest.getStartLatitude() - areaRequest.getEndLatitude();
@@ -272,14 +276,14 @@ public class LostServiceImpl implements LostService {
                 .orElseThrow(UserNotFoundException::new);
 
         List<String> keywords = koreanDecoder.decodeKorean(title);
-        StringBuilder addSql = new StringBuilder();
+        String addSql = "";
 
         if(!keywords.isEmpty()) {
-            addSql = new StringBuilder(" WHERE l.title LIKE '%" + keywords.get(0) + "%'");
+            addSql = " WHERE l.title LIKE '%" + keywords.get(0) + "%'";
             keywords.remove(0);
 
             for(String keyword : keywords) {
-                addSql.append(" OR l.title LIKE '%").append(keyword).append("%'");
+                addSql +=" OR l.title LIKE '%" + keyword + "%'";
             }
         }
 
@@ -331,8 +335,12 @@ public class LostServiceImpl implements LostService {
         userRepository.findByKakaoId(jwtProvider.getKakaoId(token))
                 .orElseThrow(UserNotFoundException::new);
 
-        lostRepository.findAllByLostId(lostId)
+        Lost lost = lostRepository.findAllByLostId(lostId)
                 .orElseThrow(LostNotFoundException::new);
+
+        areaRepository.deleteByAreaCode(lost.getArea().getAreaCode());
+
+        lostImageRepository.deleteAllByLost_LostId(lostId);
 
         lostRepository.deleteByLostId(lostId);
     }

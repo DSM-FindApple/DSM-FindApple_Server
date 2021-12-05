@@ -24,7 +24,7 @@ public class CustomRowMapper {
         public FindResponse mapRow(ResultSet rs, int rowNum) {
             Long lostId = rs.getLong("findId");
             String title = rs.getString("title");
-            Category category = Category.values()[rs.getInt("category")];
+            Category category = Category.valueOf(rs.getString("category"));
             String detail = rs.getString("detail");
             String profileUrl = rs.getString("profileUrl");
             Double longitude = rs.getDouble("longitude");
@@ -61,7 +61,7 @@ public class CustomRowMapper {
         public LostResponse mapRow(ResultSet rs, int rowNum) {
             Long lostId = rs.getLong("lostId");
             String title = rs.getString("title");
-            Category category = Category.values()[rs.getInt("category")];
+            Category category = Category.valueOf(rs.getString("category"));
             String detail = rs.getString("detail");
             Double longitude = rs.getDouble("longitude");
             Double latitude = rs.getDouble("latitude");

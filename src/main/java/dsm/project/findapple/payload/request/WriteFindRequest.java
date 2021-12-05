@@ -1,5 +1,6 @@
 package dsm.project.findapple.payload.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import dsm.project.findapple.payload.enums.Category;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +17,7 @@ public class WriteFindRequest {
     private Category category;
     private Double longitude;
     private Double latitude;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime findAt;
     private List<MultipartFile> images;
 }

@@ -27,7 +27,7 @@ public class RelationLostRepository {
     @Transactional
     public List<FindResponse> findAllByRelation(String addQuery, Page page) {
         String sql = myQueries.getFindAllByRelation() + addQuery
-                + "ORDER BY l.write_at, l.find_at DESC LIMIT :limit OFFSET :offset";
+                + " ORDER BY l.write_at, l.find_at DESC LIMIT :limit OFFSET :offset";
 
         log.info(sql);
 
