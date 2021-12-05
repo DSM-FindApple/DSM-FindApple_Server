@@ -316,7 +316,7 @@ public class LostServiceImpl implements LostService {
                                 .writeAt(comment.getWriteAt())
                                 .userId(comment.getUser().getKakaoId())
                                 .nickName(comment.getUser().getKakaoNickName())
-                                .postId(comment.getLost().getLostId())
+                                .postId(comment.getFind().getFindId())
                                 .comment(comment.getComment())
                                 .build()
                 );
