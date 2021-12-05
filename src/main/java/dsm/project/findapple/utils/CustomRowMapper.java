@@ -30,10 +30,7 @@ public class CustomRowMapper {
             Double longitude = rs.getDouble("longitude");
             Double latitude = rs.getDouble("latitude");
             LocalDate writeAt = rs.getDate("writeAt").toLocalDate();
-            LocalDateTime lostAt = rs.getDate("findAt")
-                    .toInstant()
-                    .atZone(ZoneId.of("Asia/Seoul"))
-                    .toLocalDateTime();
+            LocalDateTime lostAt = LocalDateTime.ofInstant(rs.getDate("findAt").toInstant(), ZoneId.of("Asia/Seoul"));
             Long kakaoId = rs.getLong("kakaoId");
             String lostUser = rs.getString("lostUser");
 
@@ -67,10 +64,7 @@ public class CustomRowMapper {
             Double latitude = rs.getDouble("latitude");
             LocalDate writeAt = rs.getDate("writeAt").toLocalDate();
             String profileUrl = rs.getString("profileUrl");
-            LocalDateTime lostAt = rs.getDate("lostAt")
-                    .toInstant()
-                    .atZone(ZoneId.of("Asia/Seoul"))
-                    .toLocalDateTime();
+            LocalDateTime lostAt = LocalDateTime.ofInstant(rs.getDate("lostAt").toInstant(), ZoneId.of("Asia/Seoul"));
             Long kakaoId = rs.getLong("kakaoId");
             String lostUser = rs.getString("lostUser");
 
